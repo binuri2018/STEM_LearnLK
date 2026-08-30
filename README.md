@@ -99,3 +99,17 @@ Binuri/
 | `OLLAMA_*` | Local chat when OpenAI key is empty. |
 
 After changing `EMBEDDING_PROVIDER` or embedding model, **delete `data/*` and re-run `python scripts/ingest.py`**.
+
+---
+
+## Narrative Learning
+
+Open **http://127.0.0.1:8000/narrative-learning**. This module uses its own NIE textbook index (Chroma + `nomic-embed-text`) and a persona classifier — it does not share the Voice Tutor FAISS store.
+
+Set `LLM_PROVIDER`, `GROQ_API_KEY` or local Ollama, and `OLLAMA_EMBED_MODEL=nomic-embed-text` in `.env`. Point `NARRATIVE_VECTOR_DB` at a built `science_vector_db` folder if it is not next to the component.
+
+Retrain the classifier when survey CSV is ready:
+
+```powershell
+python scripts\train_persona.py --base path\to\sri_lankan_student.csv --survey path\to\form.csv
+```
