@@ -9,16 +9,20 @@ from fastapi.responses import Response
 
 from backend.common.config import settings
 from backend.common.embeddings import EmbeddingLoadError
+from backend.common.image_retrieval import find_images_for_hits
 from backend.common.retrieval import format_context_for_llm, retrieve
 from backend.common.vector_store import VectorStore
+from backend.common.visual_explainer import retrieve_visual_explanation
 from backend.components.voice_tutor.audio_services import synthesize_speech, transcribe_bytes
 from backend.components.voice_tutor.llm import REFUSAL_EN, REFUSAL_SI, answer_question
 from backend.components.voice_tutor.schemas import (
     AskRequest,
     AskResponse,
+    ImageItem,
     SourceItem,
     TranscribeResponse,
     TtsRequest,
+    VisualItem,
 )
 
 router = APIRouter(tags=["Voice Tutor"])
@@ -103,7 +107,32 @@ def ask_question_endpoint(body: AskRequest) -> AskResponse:
         )
         for h in hits
     ]
-    return AskResponse(answer=answer, sources=sources)
+
+    # 1. Local Textbook Image retrieval — purely additive, never breaks answer generation
+    images: list[ImageItem] = []
+    try:
+        raw_images = find_images_for_hits(hits, body.question.strip())
+        images = [ImageItem(**img) for img in raw_images]
+    except Exception:
+        pass  # silently degrade — text answer is unaffected
+
+    # 2. Dynamic Internet Visual Explanation Retrieval
+    visual_required = False
+    visual: VisualItem | None = None
+    try:
+        visual_required, raw_visual = retrieve_visual_explanation(body.question.strip())
+        if raw_visual:
+            visual = VisualItem(**raw_visual)
+    except Exception:
+        pass  # visual retrieval failures never affect text answers
+
+    return AskResponse(
+        answer=answer,
+        sources=sources,
+        images=images,
+        visual_required=visual_required,
+        visual=visual,
+    )
 
 
 @router.post("/transcribe", response_model=TranscribeResponse)
