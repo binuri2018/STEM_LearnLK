@@ -11,6 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/common/css/global.css" />
+    <link rel="stylesheet" href="/static/knowledge_maps/styles.css" />
   </head>
   <body>
     <div class="shell">
@@ -69,19 +70,307 @@
               <div class="module-icon-sm maps-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg></div>
               <h2 class="page-title">Knowledge Maps</h2>
             </div>
+            <div id="health-pill" class="health-pill" aria-live="polite">Checking...</div>
           </div>
-          <div class="coming-soon-wrap">
-            <div class="coming-soon-card">
-              <div class="coming-soon-icon maps-icon">
-                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>
+
+          <!-- ═══════════════ TAB NAV ═══════════════ -->
+          <div class="tab-nav" role="tablist" aria-label="Knowledge Maps navigation tabs">
+            <button class="tab active" data-tab="qa" role="tab" aria-selected="true">Q&amp;A</button>
+            <button class="tab" data-tab="verify" role="tab" aria-selected="false">Verify Notes</button>
+            <button class="tab" data-tab="synthesis" role="tab" aria-selected="false">Synthesis</button>
+          </div>
+
+          <div class="main">
+
+            <!-- ═══════════════ TAB: Q&A ═══════════════ -->
+            <div id="tab-qa" class="tab-panel active" role="tabpanel">
+              <div class="panels-row">
+                <section class="panel ask-panel">
+                  <div class="toolbar">
+                    <label class="field-label" for="lang">Answer language</label>
+                    <select id="lang" name="lang" class="select">
+                      <option value="auto">Auto (match question)</option>
+                      <option value="en">English</option>
+                      <option value="si">සිංහල (Sinhala)</option>
+                    </select>
+                  </div>
+
+                  <label class="field-label" for="question">Your question</label>
+                  <textarea
+                    id="question"
+                    class="textarea"
+                    rows="4"
+                    placeholder="e.g. What is the difference between speed and velocity? / විගය සහ වේගය අතර වෙනස කුමක්ද?"
+                  ></textarea>
+
+                  <div class="actions">
+                    <button type="button" id="btn-ask" class="btn primary">Get answer</button>
+                    <button type="button" id="btn-mic" class="btn ghost" title="Speak question (Whisper)">
+                      <span class="mic-icon" aria-hidden="true">●</span>
+                      <span id="mic-label">Voice input</span>
+                    </button>
+                    <button type="button" id="btn-tts" class="btn ghost" disabled title="Read answer aloud">
+                      Read answer
+                    </button>
+                  </div>
+                  <p class="hint">
+                    Voice and "Read answer" use OpenAI when <code>OPENAI_API_KEY</code> is set.
+                    Otherwise your browser may read text using speech synthesis (quality varies for Sinhala).
+                  </p>
+                </section>
+
+                <section class="panel answer-panel">
+                  <h2 class="section-title">Answer</h2>
+                  <div id="answer" class="answer-box muted">Ask a question to see the syllabus-based reply.</div>
+
+                  <h2 class="section-title sources-title">Sources</h2>
+                  <div id="sources" class="sources"></div>
+                </section>
               </div>
-              <h3>Knowledge Maps</h3>
-              <p>Visual knowledge mapping is coming soon. Upload your handwritten notes to verify corrections and generate interactive revision maps linked to syllabus topics.</p>
-              <div class="coming-badge">Coming Soon</div>
             </div>
+
+            <!-- ═══════════════ TAB: VERIFY NOTES ═══════════════ -->
+            <div id="tab-verify" class="tab-panel" role="tabpanel" hidden>
+              <section class="panel full-panel">
+                <div class="verify-layout">
+
+                  <!-- LEFT: upload + OCR -->
+                  <div class="verify-left">
+                    <h2 class="section-title">1. Upload Handwritten Note</h2>
+
+                    <button type="button" id="drop-zone" class="drop-zone" aria-label="Drop image or click to browse">
+                      <input type="file" id="note-file" accept="image/*" hidden />
+                      <span class="drop-icon" aria-hidden="true">🖼</span>
+                      <p class="drop-primary">Drop image here or <span class="drop-link">browse</span></p>
+                      <p class="drop-secondary">PNG, JPG, JPEG · max 10 MB</p>
+                    </button>
+
+                    <div id="image-preview-wrap" class="image-preview-wrap hidden">
+                      <img id="image-preview" class="image-preview" src="" alt="Uploaded note preview" />
+                      <button type="button" id="btn-clear-image" class="btn ghost btn-sm">✕ Remove</button>
+                    </div>
+
+                    <div class="verify-ocr-section">
+                      <div class="ocr-header">
+                        <label class="field-label" for="extracted-text">2. Extracted Text</label>
+                        <div id="ocr-status" class="ocr-status"></div>
+                      </div>
+                      <textarea
+                        id="extracted-text"
+                        class="textarea"
+                        rows="6"
+                        placeholder="OCR text will appear here after upload. You can also paste or type text directly."
+                      ></textarea>
+                    </div>
+
+                    <div class="verify-lang-row">
+                      <label class="field-label" for="verify-lang">Language</label>
+                      <select id="verify-lang" class="select select-sm">
+                        <option value="en">English</option>
+                        <option value="si">සිංහල</option>
+                      </select>
+                    </div>
+
+                    <div class="actions">
+                      <button type="button" id="btn-upload-ocr" class="btn primary">
+                        <span class="btn-icon">⬆</span> Upload &amp; Extract Text
+                      </button>
+                      <button type="button" id="btn-verify" class="btn ghost" disabled>
+                        <span class="btn-icon">✓</span> Verify Content
+                      </button>
+                      <button type="button" id="btn-correct-note-quick" class="btn ghost" disabled>
+                        <span class="btn-icon">✦</span> Corrected Note
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- RIGHT: results -->
+                  <div class="verify-right">
+                    <div class="result-tabs" id="verify-result-tabs" hidden>
+                      <div class="sub-tab-nav" role="tablist" aria-label="Verification result tabs">
+                        <button class="sub-tab active" data-subtab="verification" role="tab" aria-selected="true">Verification</button>
+                        <button class="sub-tab" data-subtab="corrections" role="tab" aria-selected="false">AI Corrections</button>
+                        <button class="sub-tab" data-subtab="corrected-note" role="tab" aria-selected="false">Corrected Note</button>
+                      </div>
+
+                      <!-- Verification sub-tab -->
+                      <div id="subtab-verification" class="sub-tab-panel active">
+                        <div id="score-bar-wrap" class="score-bar-wrap">
+                          <div class="score-label">
+                            <span id="score-text">–</span>
+                            <span id="score-pct" class="score-pct"></span>
+                          </div>
+                          <div class="score-track">
+                            <div id="score-fill" class="score-fill" style="width:0%"></div>
+                          </div>
+                        </div>
+
+                        <div id="claims-list" class="claims-list">
+                          <p class="muted-hint">Run verification to see claim-by-claim results.</p>
+                        </div>
+                      </div>
+
+                      <!-- Corrections sub-tab -->
+                      <div id="subtab-corrections" class="sub-tab-panel" hidden>
+                        <div id="corrections-list" class="corrections-list">
+                          <p class="muted-hint">No corrections yet — run verification first.</p>
+                        </div>
+                      </div>
+
+                      <!-- Corrected Note sub-tab -->
+                      <div id="subtab-corrected-note" class="sub-tab-panel" hidden>
+                        <div class="corrected-note-actions">
+                          <button type="button" id="btn-correct-note" class="btn ghost">
+                            <span class="btn-icon">✦</span> Generate Corrected Note
+                          </button>
+                          <div id="correct-note-loading" class="yt-loading hidden">
+                            <div class="spinner"></div>
+                            <span>Rewriting note…</span>
+                          </div>
+                        </div>
+                        <div id="corrected-note-output" class="corrected-note-output">
+                          <p class="muted-hint">Click "Generate Corrected Note" after verifying your text.</p>
+                        </div>
+
+                        <!-- Auto-extracted topic tags -->
+                        <div id="tags-section" class="tags-section hidden">
+                          <h4 class="tags-section-title">Related Topics</h4>
+                          <div id="tag-chips-container" class="tag-chips"></div>
+                          <button type="button" id="find-videos-btn" class="btn ghost">
+                            <span class="btn-icon">▶</span> Find Videos
+                          </button>
+                          <div id="tag-videos-loading" class="yt-loading hidden">
+                            <div class="spinner"></div>
+                            <span>Searching YouTube…</span>
+                          </div>
+                        </div>
+
+                        <!-- Video suggestions from tags -->
+                        <div id="tag-videos-section" class="hidden">
+                          <h4 class="tags-section-title">Related Videos</h4>
+                          <p class="hint" style="margin-top:0;">Click a video to play it in a new tab.</p>
+                          <div id="tag-videos-grid" class="yt-suggest-grid"></div>
+                        </div>
+
+                        <!-- Video summary + Add to Note -->
+                        <div id="video-summary-panel" class="video-summary-panel hidden">
+                          <div id="video-summary-loading" class="yt-loading hidden">
+                            <div class="spinner"></div>
+                            <span>Summarising video…</span>
+                          </div>
+                          <div id="video-summary-content" class="hidden">
+                            <h4 id="video-summary-title" class="tags-section-title"></h4>
+                            <p id="video-summary-text"></p>
+                            <ul id="video-key-points"></ul>
+                            <button type="button" id="add-to-note-btn" class="btn ghost">
+                              <span class="btn-icon">+</span> Add to Note
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- placeholder before first verification -->
+                    <div id="verify-placeholder" class="verify-placeholder">
+                      <span class="placeholder-icon" aria-hidden="true">🔬</span>
+                      <p>Upload a note image or paste text, then click <strong>Verify Content</strong> to check it against the syllabus.</p>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+            </div>
+
+            <!-- ═══════════════ TAB: SYNTHESIS ═══════════════ -->
+            <div id="tab-synthesis" class="tab-panel" role="tabpanel" hidden>
+              <section class="panel full-panel">
+
+                <div class="synth-input-section">
+                  <label class="field-label" for="synth-text">Text to Synthesise</label>
+                  <p class="hint" style="margin-top:0; margin-bottom:.5rem;">
+                    Paste notes or verified text here, then choose a synthesis mode below.
+                  </p>
+                  <textarea
+                    id="synth-text"
+                    class="textarea"
+                    rows="5"
+                    placeholder="Paste your notes or extracted text here…"
+                  ></textarea>
+                  <div class="synth-controls">
+                    <select id="synth-lang" class="select select-sm">
+                      <option value="en">English</option>
+                      <option value="si">සිංහල</option>
+                    </select>
+                    <button type="button" id="btn-synth-all" class="btn primary">Generate All</button>
+                  </div>
+                </div>
+
+                <div class="sub-tab-nav" role="tablist" aria-label="Synthesis output tabs" style="margin-top: 1.25rem;">
+                  <button class="sub-tab active" data-subtab="synth-flashcards" role="tab" aria-selected="true">Flashcards</button>
+                  <button class="sub-tab" data-subtab="synth-mindmap" role="tab" aria-selected="false">Mind Map</button>
+                  <button class="sub-tab" data-subtab="synth-notes" role="tab" aria-selected="false">Structured Notes</button>
+                </div>
+
+                <!-- Flashcards sub-tab -->
+                <div id="subtab-synth-flashcards" class="sub-tab-panel active" style="margin-top: 1rem;">
+                  <div id="flashcard-area" class="flashcard-area">
+                    <p class="muted-hint">Generate flashcards to start studying.</p>
+                  </div>
+                </div>
+
+                <!-- Mind Map sub-tab -->
+                <div id="subtab-synth-mindmap" class="sub-tab-panel" hidden style="margin-top: 1rem;">
+                  <div class="mindmap-toolbar" id="mindmap-toolbar" role="toolbar" aria-label="Mind map controls">
+                    <div class="mm-tb-group">
+                      <button type="button" class="btn ghost btn-sm" data-mm="regen" disabled>↻ Regenerate</button>
+                    </div>
+                    <div class="mm-tb-group mm-tb-zoom" role="group" aria-label="Zoom">
+                      <button type="button" class="btn ghost btn-sm btn-icon" data-mm="fit" disabled title="Fit to view (0)" aria-label="Fit to view">⤢</button>
+                      <button type="button" class="btn ghost btn-sm btn-icon" data-mm="zoom-out" disabled title="Zoom out (−)" aria-label="Zoom out">−</button>
+                      <span class="mm-zoom" id="mm-zoom" aria-live="polite">100%</span>
+                      <button type="button" class="btn ghost btn-sm btn-icon" data-mm="zoom-in" disabled title="Zoom in (+)" aria-label="Zoom in">+</button>
+                    </div>
+                    <div class="mm-tb-group" role="group" aria-label="Branches">
+                      <button type="button" class="btn ghost btn-sm" data-mm="collapse" disabled>⊟ Collapse</button>
+                      <button type="button" class="btn ghost btn-sm" data-mm="expand" disabled>⊞ Expand</button>
+                    </div>
+                    <div class="mm-tb-group mm-tb-export" role="group" aria-label="Export">
+                      <span class="mm-tb-label">Export</span>
+                      <button type="button" class="btn ghost btn-sm" data-mm="png" disabled>PNG</button>
+                      <button type="button" class="btn ghost btn-sm" data-mm="svg" disabled>SVG</button>
+                      <button type="button" class="btn ghost btn-sm" data-mm="json" disabled>JSON</button>
+                    </div>
+                    <button type="button" class="btn ghost btn-sm btn-icon mm-tb-fs" data-mm="fullscreen" disabled title="Fullscreen (f)" aria-label="Toggle fullscreen">⛶</button>
+                  </div>
+                  <div class="mindmap-legend" id="mindmap-legend" hidden></div>
+                  <div id="mindmap-wrap" class="mindmap-container" tabindex="0" aria-label="Mind map. Arrow keys pan when focused; 0 fits, plus and minus zoom, f toggles fullscreen.">
+                    <svg id="mindmap-svg" class="mindmap-svg"></svg>
+                    <div id="mindmap-placeholder" class="mindmap-placeholder">
+                      <span aria-hidden="true">🕸</span>
+                      <p>Generate a mind map to visualise concept relationships.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Structured Notes sub-tab -->
+                <div id="subtab-synth-notes" class="sub-tab-panel" hidden style="margin-top: 1rem;">
+                  <div id="structured-notes-content" class="structured-notes">
+                    <p class="muted-hint">Generate structured notes to see an organised outline.</p>
+                  </div>
+                </div>
+
+              </section>
+            </div>
+
           </div>
         </section>
       </main>
     </div>
+
+    <script src="/static/knowledge_maps/repair-state.js" defer></script>
+    <script src="/static/knowledge_maps/vendor/d3.v7.min.js" defer></script>
+    <script src="/static/knowledge_maps/mindmap-model.js" defer></script>
+    <script src="/static/knowledge_maps/mindmap-render.js" defer></script>
+    <script type="module" src="/static/knowledge_maps/app.js" defer></script>
   </body>
 </html>

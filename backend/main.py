@@ -4,7 +4,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 import logging
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -18,6 +18,9 @@ from backend.common.index_manifest import resolve_runtime_manifest
 from backend.common.vector_store import VectorStore
 from backend.components.adaptive_quiz import adaptive_quiz_router
 from backend.components.knowledge_maps import knowledge_maps_router
+from backend.components.knowledge_maps.router import (
+    set_store_getter as set_knowledge_maps_store_getter,
+)
 from backend.components.narrative_learning import narrative_learning_router
 from backend.components.voice_tutor.router import (
     router as voice_tutor_router,
@@ -39,6 +42,7 @@ def get_store() -> VectorStore:
 
 
 set_store_getter(get_store)
+set_knowledge_maps_store_getter(get_store)
 
 
 @asynccontextmanager
@@ -69,6 +73,16 @@ app = FastAPI(
     title="Sri Lanka G10–11 Science AI STEM Ecosystem",
     lifespan=lifespan,
 )
+
+
+@app.middleware("http")
+async def revalidate_frontend_assets(request: Request, call_next):
+    """Prevent an open browser tab from reusing an outdated UI bundle."""
+    response = await call_next(request)
+    path = request.url.path
+    if path == "/" or path.startswith("/static/"):
+        response.headers["Cache-Control"] = "no-cache, must-revalidate"
+    return response
 
 
 @app.get("/api/health")

@@ -14,7 +14,16 @@ sentence-transformers>=2.6.0
 faiss-cpu>=1.8.0
 numpy>=1.26.0
 certifi>=2024.0.0
+rank-bm25>=0.2.2
+Pillow>=10.0.0
 
 # LLM (optional: set OPENAI_API_KEY; otherwise configure Ollama)
 openai>=1.30.0
 httpx>=0.27.0
+
+# Knowledge Maps (Member 4) — YouTube transcript fetch + suggestions
+youtube-transcript-api>=0.6.2
+google-api-python-client>=2.100.0
+
+# Knowledge Maps (Member 4) — web search fallback for claim verification
+duckduckgo-search>=6.0.0

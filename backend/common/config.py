@@ -45,11 +45,50 @@ class Settings(BaseSettings):
     # First local inference after pull/start can exceed 120s while the model loads into RAM.
     ollama_timeout_seconds: float = 600.0
 
+    # Member 4 — local-first LLM. Azure remains available as an optional
+    # full-provider fallback for research comparisons and operations.
+    m4_llm_provider: Literal["ollama", "azure"] = "ollama"
+    m4_ollama_model: str = "gemma4:cloud"
+
     faiss_index_name: str = "science_index.faiss"
     metadata_name: str = "science_metadata.jsonl"
     index_manifest_name: str = "index_manifest.json"
     image_faiss_index_name: str = "image_index.faiss"
     image_metadata_name: str = "image_metadata.jsonl"
+
+    # Optional Member 4 cloud fallback, used only when M4_LLM_PROVIDER=azure.
+    # Existing /api/ask, /api/transcribe, /api/tts continue to use direct OpenAI.
+    azure_openai_endpoint: str | None = None
+    azure_openai_api_key: str | None = None
+    azure_openai_api_version: str = "2024-08-01-preview"
+    azure_openai_deployment: str | None = None  # the DEPLOYMENT name in Azure Foundry, not model name
+
+    # Member 4 — YouTube Data API v3 (used by /api/m4/youtube-suggest)
+    youtube_api_key: str | None = None
+
+    # Only these domains (or their subdomains) may decide a web-backed verdict.
+    m4_web_allowed_domains: str = ""
+    m4_confidence_model_path: Path | None = None
+    m4_hybrid_dense_k: int = 20
+    m4_hybrid_bm25_k: int = 20
+    # Passages actually scored by the (CPU-only, no GPU) cross-encoder reranker.
+    # Reranker cost scales ~linearly with this count (~2s/passage measured), so
+    # keep it well below dense_k/bm25_k rather than reranking every fused candidate.
+    m4_hybrid_fused_k: int = 8
+    m4_hybrid_final_k: int = 5
+    m4_rrf_k: int = 60
+    m4_reranker_model: str = "BAAI/bge-reranker-v2-m3"
+    m4_reranker_revision: str | None = None
+    m4_query_glossary_path: Path | None = None
+    m4_retrieval_policy_path: Path | None = None
+    m4_ocr_glossary_path: str = ""
+    m4_ocr_max_dimension: int = 2400
+    m4_ocr_confidence_low: float = 0.65
+    m4_ocr_confidence_high: float = 0.85
+
+    # Bounded concurrency for the per-claim verify/repair fan-out (backend/components/knowledge_maps/concurrency.py).
+    m4_verify_max_workers: int = 5
+    m4_web_search_timeout_seconds: float = 8.0
 
     def resolved_resource_dir(self) -> Path:
         p = self.resource_dir
