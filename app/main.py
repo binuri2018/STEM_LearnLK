@@ -188,12 +188,36 @@ async def tts_endpoint(body: TtsRequest) -> Response:
 _web_dir = settings.project_root / "web"
 
 
-@app.get("/", include_in_schema=False)
-def serve_student_ui() -> FileResponse:
+def _serve_index() -> FileResponse:
     index = _web_dir / "index.html"
     if not index.is_file():
         raise HTTPException(status_code=404, detail="web/index.html not found.")
     return FileResponse(index)
+
+
+@app.get("/", include_in_schema=False)
+def serve_home() -> FileResponse:
+    return _serve_index()
+
+
+@app.get("/narrative-learning", include_in_schema=False)
+def serve_narrative() -> FileResponse:
+    return _serve_index()
+
+
+@app.get("/voice-tutor", include_in_schema=False)
+def serve_voice() -> FileResponse:
+    return _serve_index()
+
+
+@app.get("/adaptive-quiz", include_in_schema=False)
+def serve_quiz() -> FileResponse:
+    return _serve_index()
+
+
+@app.get("/knowledge-maps", include_in_schema=False)
+def serve_maps() -> FileResponse:
+    return _serve_index()
 
 
 if _web_dir.is_dir():

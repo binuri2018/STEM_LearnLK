@@ -3,78 +3,309 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Grade 10–11 Science Tutor · Syllabus RAG</title>
+    <title>AI STEM Ecosystem · STEM Learn LK</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Noto+Sans+Sinhala:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Noto+Sans+Sinhala:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
-    <div class="page">
-      <header class="header">
-        <div class="brand">
-          <span class="logo" aria-hidden="true">◉</span>
+
+    <!-- APP SHELL -->
+    <div class="shell">
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="sidebar-logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <circle cx="11" cy="11" r="10" fill="#00C896" opacity="0.15"/>
+              <circle cx="11" cy="11" r="6"  fill="#00C896" opacity="0.4"/>
+              <circle cx="11" cy="11" r="3"  fill="#00C896"/>
+            </svg>
+          </div>
           <div>
-            <h1>Science study assistant</h1>
-            <p class="tagline">
-              Sri Lanka Grades 10–11 · answers from your syllabus PDFs only
-            </p>
+            <div class="sidebar-brand-sub">AI STEM Ecosystem</div>
+            <div class="sidebar-brand-name">STEM Learn LK</div>
           </div>
         </div>
-        <div id="health-pill" class="health-pill" aria-live="polite">Checking…</div>
-      </header>
 
-      <main class="main">
-        <section class="panel ask-panel">
-          <div class="toolbar">
-            <label class="field-label" for="lang">Answer language</label>
-            <select id="lang" name="lang" class="select">
-              <option value="auto">Auto (match question)</option>
-              <option value="en">English</option>
-              <option value="si">සිංහල (Sinhala)</option>
-            </select>
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-page="home" aria-current="page">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h4a1 1 0 001-1v-3h2v3a1 1 0 001 1h4a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+            Home
+          </button>
+          <button class="nav-item" data-page="narrative">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.396 0 2.7.405 3.8 1.104A7.968 7.968 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.969 7.969 0 0014.5 4c-1.396 0-2.7.405-3.8 1.104A7.968 7.968 0 0110 4.804z"/></svg>
+            Narrative Learning
+          </button>
+          <button class="nav-item" data-page="voice">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 10-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"/></svg>
+            Voice Tutor
+          </button>
+          <button class="nav-item" data-page="quiz">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.995.512-1.93 1.343-2.5C14.558 10.685 15 9.352 15 8a5 5 0 10-10 0c0 1.352.442 2.685 1.657 3.5.83.57 1.328 1.505 1.343 2.5h4z"/></svg>
+            Adaptive Quiz
+          </button>
+          <button class="nav-item" data-page="maps">
+            <svg class="nav-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>
+            Knowledge Maps
+          </button>
+        </nav>
+
+        <div class="sidebar-loop">
+          <div class="loop-label">Study loop</div>
+          <div class="loop-steps">Learn -> Interact -> Assess -> Revise</div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT AREA -->
+      <div class="content-area">
+
+        <!-- HOME PAGE -->
+        <section id="page-home" class="page-section active">
+          <div class="home-hero">
+            <div class="hero-left">
+              <div class="hero-eyebrow">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="#00C896"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                Welcome back - your STEM tutor is ready.
+              </div>
+              <h1 class="hero-title">Hi there, ready for a calm revision lap?</h1>
+              <p class="hero-desc">Pick a module below - learn with narrative context, talk it through, test yourself, then tidy handwritten notes into a revision map.</p>
+            </div>
+            <div class="hero-profile-card">
+              <div class="profile-label">PROFILE</div>
+              <div class="profile-row">
+                <div class="profile-info">
+                  <div class="profile-name">Student</div>
+                  <div class="profile-meta">Grade 10-11 - Sri Lanka</div>
+                </div>
+                <div class="profile-avatar" aria-hidden="true">SL</div>
+              </div>
+              <div class="profile-stats">
+                <div class="stat-row">
+                  <span class="stat-label">API Status</span>
+                  <span class="stat-value" id="health-pill-home">Checking...</span>
+                </div>
+                <div class="stat-bar-track"><div class="stat-bar-fill" style="width:70%"></div></div>
+                <div class="day-chart" aria-hidden="true">
+                  <div class="day-col"><span class="day-label">Mon</span><div class="day-bar-wrap"><div class="day-bar" style="height:40%"></div></div></div>
+                  <div class="day-col"><span class="day-label">Tue</span><div class="day-bar-wrap"><div class="day-bar" style="height:25%"></div></div></div>
+                  <div class="day-col"><span class="day-label">Wed</span><div class="day-bar-wrap"><div class="day-bar" style="height:55%"></div></div></div>
+                  <div class="day-col"><span class="day-label">Thu</span><div class="day-bar-wrap"><div class="day-bar" style="height:20%"></div></div></div>
+                  <div class="day-col"><span class="day-label">Fri</span><div class="day-bar-wrap"><div class="day-bar" style="height:70%"></div></div></div>
+                  <div class="day-col"><span class="day-label">Sat</span><div class="day-bar-wrap"><div class="day-bar" style="height:45%"></div></div></div>
+                  <div class="day-col"><span class="day-label">Sun</span><div class="day-bar-wrap"><div class="day-bar" style="height:90%"></div></div></div>
+                </div>
+                <div class="profile-streak">Streak: 0 days</div>
+                <div class="profile-focus">Focus: Science - OL Syllabus</div>
+              </div>
+            </div>
           </div>
 
-          <label class="field-label" for="question">Your question</label>
-          <textarea
-            id="question"
-            class="textarea"
-            rows="4"
-            placeholder="e.g. What is the difference between speed and velocity? / විගය සහ වේගය අතර වෙනස කුමක්ද?"
-          ></textarea>
+          <div class="module-section">
+            <h2 class="module-section-title">Choose your next step</h2>
+            <p class="module-section-sub">Four AI companions - <em>one</em> friendly loop.</p>
+            <div class="module-grid">
 
-          <div class="actions">
-            <button type="button" id="btn-ask" class="btn primary">Get answer</button>
-            <button type="button" id="btn-mic" class="btn ghost" title="Speak question (Whisper)">
-              <span class="mic-icon" aria-hidden="true">●</span>
-              <span id="mic-label">Voice input</span>
-            </button>
-            <button type="button" id="btn-tts" class="btn ghost" disabled title="Read answer aloud">
-              Read answer
-            </button>
+              <button class="module-card" data-page="narrative">
+                <div class="module-card-left">
+                  <div class="module-icon narrative-icon">
+                    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.396 0 2.7.405 3.8 1.104A7.968 7.968 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.969 7.969 0 0014.5 4c-1.396 0-2.7.405-3.8 1.104A7.968 7.968 0 0110 4.804z"/></svg>
+                  </div>
+                  <div class="module-text">
+                    <div class="module-name">Narrative Learning</div>
+                    <div class="module-desc">Story-led path into your syllabus - same chapter as your AR lab (demo).</div>
+                  </div>
+                </div>
+                <div class="module-open">Open <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></div>
+              </button>
+
+              <button class="module-card" data-page="voice">
+                <div class="module-card-left">
+                  <div class="module-icon voice-icon">
+                    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 10-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"/></svg>
+                  </div>
+                  <div class="module-text">
+                    <div class="module-name">Voice Tutor</div>
+                    <div class="module-desc">Talk through V = IR, units, and circuits with calm, chat-style help.</div>
+                  </div>
+                </div>
+                <div class="module-open">Open <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></div>
+              </button>
+
+              <button class="module-card" data-page="quiz">
+                <div class="module-card-left">
+                  <div class="module-icon quiz-icon">
+                    <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.995.512-1.93 1.343-2.5C14.558 10.685 15 9.352 15 8a5 5 0 10-10 0c0 1.352.442 2.685 1.657 3.5.83.57 1.328 1.505 1.343 2.5h4z"/></svg>
+                  </div>
+                  <div class="module-text">
+                    <div class="module-name">Adaptive Quiz</div>
+                    <div class="module-desc">Nine-step check on Ohm Law after the AR lesson (basic to advanced).</div>
+                  </div>
+                </div>
+                <div class="module-open">Open <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></div>
+              </button>
+
+              <button class="module-card" data-page="maps">
+                <div class="module-card-left">
+                  <div class="module-icon maps-icon">
+                    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>
+                  </div>
+                  <div class="module-text">
+                    <div class="module-name">Knowledge Maps</div>
+                    <div class="module-desc">Verify handwritten notes on circuits - demo uses Ohm Law corrections.</div>
+                  </div>
+                </div>
+                <div class="module-open">Open <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg></div>
+              </button>
+
+            </div>
           </div>
-          <p class="hint">
-            Voice and “Read answer” use OpenAI when <code>OPENAI_API_KEY</code> is set. Otherwise your
-            browser may read text using speech synthesis (quality varies for Sinhala).
-          </p>
+
+          <footer class="home-footer">
+            <span>Built for calm, focused OL revision - friendly AI, human pacing.</span>
+            <span>Demo frontend - Swap mocks for your backend when ready</span>
+          </footer>
         </section>
 
-        <section class="panel answer-panel">
-          <h2 class="section-title">Answer</h2>
-          <div id="answer" class="answer-box muted">Ask a question to see the syllabus-based reply.</div>
-
-          <h2 class="section-title sources-title">Sources</h2>
-          <div id="sources" class="sources"></div>
+        <!-- NARRATIVE LEARNING -->
+        <section id="page-narrative" class="page-section">
+          <div class="page-header">
+            <button class="back-btn" data-page="home">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+              Back
+            </button>
+            <div class="page-header-info">
+              <div class="module-icon-sm narrative-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.396 0 2.7.405 3.8 1.104A7.968 7.968 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.969 7.969 0 0014.5 4c-1.396 0-2.7.405-3.8 1.104A7.968 7.968 0 0110 4.804z"/></svg></div>
+              <h2 class="page-title">Narrative Learning</h2>
+            </div>
+          </div>
+          <div class="coming-soon-wrap">
+            <div class="coming-soon-card">
+              <div class="coming-soon-icon narrative-icon">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.396 0 2.7.405 3.8 1.104A7.968 7.968 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.969 7.969 0 0014.5 4c-1.396 0-2.7.405-3.8 1.104A7.968 7.968 0 0110 4.804z"/></svg>
+              </div>
+              <h3>Narrative Learning</h3>
+              <p>Story-led learning paths are coming soon. This module will guide you through syllabus topics using rich narrative context and visual imagery.</p>
+              <div class="coming-badge">Coming Soon</div>
+            </div>
+          </div>
         </section>
-      </main>
 
-      <footer class="footer">
-        <span>Local RAG · FAISS + strict context-only prompt</span>
-      </footer>
+        <!-- VOICE TUTOR -->
+        <section id="page-voice" class="page-section">
+          <div class="page-header">
+            <button class="back-btn" data-page="home">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+              Back
+            </button>
+            <div class="page-header-info">
+              <div class="module-icon-sm voice-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 10-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"/></svg></div>
+              <h2 class="page-title">Voice Tutor</h2>
+            </div>
+            <div id="health-pill" class="health-pill" aria-live="polite">Checking...</div>
+          </div>
+
+          <div class="tutor-layout">
+            <section class="panel ask-panel">
+              <div class="toolbar">
+                <label class="field-label" for="lang">Answer language</label>
+                <select id="lang" name="lang" class="select">
+                  <option value="auto">Auto (match question)</option>
+                  <option value="en">English</option>
+                  <option value="si">Sinhala</option>
+                </select>
+              </div>
+
+              <label class="field-label" for="question">Your question</label>
+              <textarea
+                id="question"
+                class="textarea"
+                rows="4"
+                placeholder="e.g. What is the difference between speed and velocity?"
+              ></textarea>
+
+              <div class="actions">
+                <button type="button" id="btn-ask" class="btn primary">Get answer</button>
+                <button type="button" id="btn-mic" class="btn ghost" title="Speak question (Whisper)">
+                  <span class="mic-icon" aria-hidden="true">+</span>
+                  <span id="mic-label">Voice input</span>
+                </button>
+                <button type="button" id="btn-tts" class="btn ghost" disabled title="Read answer aloud">
+                  Read answer
+                </button>
+              </div>
+              <p class="hint">
+                Voice and "Read answer" use OpenAI when <code>OPENAI_API_KEY</code> is set. Otherwise your
+                browser may read text using speech synthesis (quality varies for Sinhala).
+              </p>
+            </section>
+
+            <section class="panel answer-panel">
+              <h2 class="section-title">Answer</h2>
+              <div id="answer" class="answer-box muted">Ask a question to see the syllabus-based reply.</div>
+
+              <h2 class="section-title sources-title">Sources</h2>
+              <div id="sources" class="sources"></div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ADAPTIVE QUIZ -->
+        <section id="page-quiz" class="page-section">
+          <div class="page-header">
+            <button class="back-btn" data-page="home">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+              Back
+            </button>
+            <div class="page-header-info">
+              <div class="module-icon-sm quiz-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.995.512-1.93 1.343-2.5C14.558 10.685 15 9.352 15 8a5 5 0 10-10 0c0 1.352.442 2.685 1.657 3.5.83.57 1.328 1.505 1.343 2.5h4z"/></svg></div>
+              <h2 class="page-title">Adaptive Quiz</h2>
+            </div>
+          </div>
+          <div class="coming-soon-wrap">
+            <div class="coming-soon-card">
+              <div class="coming-soon-icon quiz-icon">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.995.512-1.93 1.343-2.5C14.558 10.685 15 9.352 15 8a5 5 0 10-10 0c0 1.352.442 2.685 1.657 3.5.83.57 1.328 1.505 1.343 2.5h4z"/></svg>
+              </div>
+              <h3>Adaptive Quiz</h3>
+              <p>Step-by-step adaptive quizzes are coming soon. This module will test your understanding from basic recall through to advanced application, adjusting to your level in real time.</p>
+              <div class="coming-badge">Coming Soon</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- KNOWLEDGE MAPS -->
+        <section id="page-maps" class="page-section">
+          <div class="page-header">
+            <button class="back-btn" data-page="home">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+              Back
+            </button>
+            <div class="page-header-info">
+              <div class="module-icon-sm maps-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg></div>
+              <h2 class="page-title">Knowledge Maps</h2>
+            </div>
+          </div>
+          <div class="coming-soon-wrap">
+            <div class="coming-soon-card">
+              <div class="coming-soon-icon maps-icon">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clip-rule="evenodd"/></svg>
+              </div>
+              <h3>Knowledge Maps</h3>
+              <p>Visual knowledge mapping is coming soon. Upload your handwritten notes to verify corrections and generate interactive revision maps linked to syllabus topics.</p>
+              <div class="coming-badge">Coming Soon</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
     </div>
+
     <script src="/static/app.js" defer></script>
   </body>
 </html>

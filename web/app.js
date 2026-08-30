@@ -1,24 +1,74 @@
+/* ==========================================================
+   STEM Learn LK - App JS
+   SPA routing + Voice Tutor logic
+   ========================================================== */
+
 const API = "";
 
 const $ = (id) => document.getElementById(id);
 
+/* ──────────────────────────────────────────────────────────
+   SPA NAVIGATION
+   ────────────────────────────────────────────────────────── */
+
+const PAGES = ["home", "narrative", "voice", "quiz", "maps"];
+
+function navigateTo(page) {
+  if (!PAGES.includes(page)) page = "home";
+
+  // Toggle page sections
+  PAGES.forEach((p) => {
+    const el = $(`page-${p}`);
+    if (el) el.classList.toggle("active", p === page);
+  });
+
+  // Update sidebar nav active state
+  document.querySelectorAll(".nav-item").forEach((btn) => {
+    const isActive = btn.dataset.page === page;
+    btn.classList.toggle("active", isActive);
+    if (isActive) btn.setAttribute("aria-current", "page");
+    else btn.removeAttribute("aria-current");
+  });
+
+  // If navigating to Voice Tutor, check health
+  if (page === "voice") refreshHealth();
+
+  // Scroll content area to top
+  const ca = document.querySelector(".content-area");
+  if (ca) ca.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Wire up all [data-page] buttons (nav items, module cards, back buttons)
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-page]");
+  if (btn) navigateTo(btn.dataset.page);
+});
+
+/* ──────────────────────────────────────────────────────────
+   HEALTH CHECK
+   ────────────────────────────────────────────────────────── */
+
 async function refreshHealth() {
   const pill = $("health-pill");
+  const pillHome = $("health-pill-home");
   try {
     const r = await fetch(`${API}/api/health`);
     const j = await r.json();
-    if (j.index_loaded) {
-      pill.textContent = j.openai_configured ? "Index ready · OpenAI on" : "Index ready · Ollama chat";
-      pill.className = "health-pill ok";
-    } else {
-      pill.textContent = "No index — run ingest.py";
-      pill.className = "health-pill bad";
-    }
+    const label = j.index_loaded
+      ? j.openai_configured ? "Index ready · OpenAI on" : "Index ready · Ollama"
+      : "No index — run ingest.py";
+    const cls = j.index_loaded ? "health-pill ok" : "health-pill bad";
+    if (pill) { pill.textContent = label; pill.className = cls; }
+    if (pillHome) { pillHome.textContent = j.index_loaded ? "Ready" : "No index"; pillHome.className = cls.replace("health-pill", "stat-value"); }
   } catch {
-    pill.textContent = "API unreachable";
-    pill.className = "health-pill bad";
+    if (pill) { pill.textContent = "API unreachable"; pill.className = "health-pill bad"; }
+    if (pillHome) { pillHome.textContent = "Offline"; }
   }
 }
+
+/* ──────────────────────────────────────────────────────────
+   VOICE TUTOR — ASK
+   ────────────────────────────────────────────────────────── */
 
 function renderSources(items) {
   const el = $("sources");
@@ -36,7 +86,8 @@ function renderSources(items) {
     if (s.document_type) bits.push(s.document_type);
     if (s.source_file) bits.push(s.source_file);
     if (s.page_start != null)
-      bits.push(s.page_end != null && s.page_end !== s.page_start ? `pp. ${s.page_start}–${s.page_end}` : `p. ${s.page_start}`);
+      bits.push(s.page_end != null && s.page_end !== s.page_start
+        ? `pp. ${s.page_start}-${s.page_end}` : `p. ${s.page_start}`);
     if (s.score != null) bits.push(`sim. ${s.score.toFixed(3)}`);
     card.innerHTML = `<strong>${escapeHtml(title)}</strong><div class="source-meta">${escapeHtml(bits.join(" · "))}</div>`;
     el.appendChild(card);
@@ -60,7 +111,7 @@ async function ask() {
     return;
   }
   btn.disabled = true;
-  answerEl.textContent = "Thinking…";
+  answerEl.textContent = "Thinking...";
   answerEl.classList.remove("muted");
   $("btn-tts").disabled = true;
   try {
@@ -88,7 +139,10 @@ async function ask() {
   }
 }
 
-/** ----- Voice input (Whisper) ----- */
+/* ──────────────────────────────────────────────────────────
+   VOICE INPUT (Whisper)
+   ────────────────────────────────────────────────────────── */
+
 let mediaRecorder = null;
 let chunks = [];
 
@@ -110,9 +164,7 @@ async function toggleMic() {
     const mime = pickMime();
     mediaRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
     chunks = [];
-    mediaRecorder.ondataavailable = (e) => {
-      if (e.data.size) chunks.push(e.data);
-    };
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
     mediaRecorder.onstop = async () => {
       stream.getTracks().forEach((t) => t.stop());
       btn.classList.remove("recording");
@@ -122,7 +174,7 @@ async function toggleMic() {
     };
     mediaRecorder.start();
     btn.classList.add("recording");
-    label.textContent = "Stop…";
+    label.textContent = "Stop...";
   } catch (e) {
     alert(`Microphone error: ${e.message}`);
   }
@@ -145,7 +197,10 @@ async function sendTranscribe(blob) {
   }
 }
 
-/** ----- TTS ----- */
+/* ──────────────────────────────────────────────────────────
+   TTS
+   ────────────────────────────────────────────────────────── */
+
 function browserTts(text, langMode) {
   const u = new SpeechSynthesisUtterance(text);
   if (langMode === "si") u.lang = "si-LK";
@@ -176,11 +231,13 @@ async function playTts() {
       audio.onended = () => URL.revokeObjectURL(url);
       return;
     }
-  } catch {
-    /* fall through */
-  }
+  } catch { /* fall through */ }
   browserTts(text, lang);
 }
+
+/* ──────────────────────────────────────────────────────────
+   EVENT LISTENERS
+   ────────────────────────────────────────────────────────── */
 
 $("btn-ask").addEventListener("click", ask);
 $("btn-mic").addEventListener("click", toggleMic);
@@ -189,4 +246,9 @@ $("question").addEventListener("keydown", (e) => {
   if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask();
 });
 
+/* ──────────────────────────────────────────────────────────
+   INIT
+   ────────────────────────────────────────────────────────── */
+
+// Kick off initial health check for home page pill
 refreshHealth();

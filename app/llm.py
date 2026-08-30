@@ -7,8 +7,11 @@ from openai import OpenAI
 from app.config import settings
 
 BASE_SYSTEM = (
-    "Answer ONLY using the provided context. If the answer is not found, do not invent facts. "
-    "When you must refuse, use the exact refusal phrase required by the response-language rule below."
+    "You are a helpful Sri Lankan OL science tutor. Answer the student's question clearly and accurately "
+    "using the provided syllabus context.\n"
+    "- Combine definitions, formulas, and facts present across the context chunks to answer comparisons and conceptual questions.\n"
+    "- Do not invent outside facts.\n"
+    "- If and only if the topic is completely absent and cannot be answered from the context, use the required refusal phrase."
 )
 
 REFUSAL_EN = "This is not in the syllabus."
@@ -16,17 +19,17 @@ REFUSAL_SI = "මෙය විෂය මාලාවේ හෝ ලබා දී 
 
 LANG_RULES = {
     "en": (
-        f"If (and only if) the context does not contain the answer, reply with exactly: {REFUSAL_EN!r}\n"
-        "Otherwise write the full answer in clear English."
+        f"If the context truly does not contain the information, reply with exactly: {REFUSAL_EN!r}\n"
+        "Otherwise, write a clear, helpful answer in English based on the context."
     ),
     "si": (
-        f"If (and only if) the context does not contain the answer, reply with exactly: {REFUSAL_SI}\n"
-        "Otherwise write the full answer in clear Sinhala (සිංහල අකුරු භාවිතා කරන්න)."
+        f"If the context truly does not contain the information, reply with exactly: {REFUSAL_SI}\n"
+        "Otherwise, write a clear, helpful answer in Sinhala (සිංහල අකුරු භාවිතා කරන්න) based on the context."
     ),
     "auto": (
-        f"If (and only if) the context does not contain the answer, reply in the same language as the "
-        f"question: use {REFUSAL_EN!r} for English-style questions and {REFUSAL_SI} for Sinhala-style questions.\n"
-        "Otherwise answer in the same language as the student question (English and/or Sinhala as appropriate)."
+        f"If the context truly does not contain the information, reply in the student's language: "
+        f"use {REFUSAL_EN!r} for English questions and {REFUSAL_SI} for Sinhala questions.\n"
+        "Otherwise, answer in the same language as the student question (English or Sinhala) using the context."
     ),
 }
 
