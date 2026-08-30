@@ -190,3 +190,150 @@
 .source-card strong { color: var(--accent-dim); font-weight: 600; }
 
 .source-meta { color: var(--muted); font-size: 0.77rem; margin-top: 3px; }
+
+/* ─── TEXTBOOK FIGURES GALLERY ─── */
+.textbook-images {
+  margin-top: 1.4rem;
+}
+
+.figures-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.6rem;
+}
+
+.figure-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  max-width: 340px;
+  flex: 1 1 220px;
+  transition: box-shadow 0.15s;
+}
+
+.figure-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.figure-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  background: #f8f8f8;
+  max-height: 260px;
+}
+
+.figure-caption {
+  padding: 0.55rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cap-text {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.cap-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* ─── DYNAMIC VISUAL EXPLANATION CARD ─── */
+.visual-explanation {
+  margin-top: 1.4rem;
+}
+
+.visual-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s, transform 0.15s;
+  display: flex;
+  flex-direction: column;
+}
+
+.visual-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 200, 150, 0.12);
+  border-color: var(--accent);
+}
+
+.visual-img-wrap {
+  width: 100%;
+  max-height: 380px;
+  background: #fbfbfb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-in;
+  border-bottom: 1px solid var(--border);
+}
+
+.visual-img {
+  width: 100%;
+  height: auto;
+  max-height: 380px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.visual-img-wrap:hover .visual-img {
+  transform: scale(1.02);
+}
+
+.visual-meta-box {
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.visual-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.visual-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #86efac;
+}
+
+.visual-attr {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.visual-attr a {
+  color: var(--accent-dim);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.visual-attr a:hover {
+  text-decoration: underline;
+}

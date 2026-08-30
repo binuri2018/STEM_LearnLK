@@ -23,9 +23,31 @@ class SourceItem(BaseModel):
     page_end: int | None = None
 
 
+class ImageItem(BaseModel):
+    """A textbook figure retrieved alongside the text answer."""
+    image_id: str
+    url: str
+    source: str
+    page: int
+    caption: str = ""
+
+
+class VisualItem(BaseModel):
+    """An internet-retrieved educational visual explanation diagram."""
+    image_url: str
+    title: str
+    source_name: str
+    source_url: str
+    search_query: str
+    relevance_score: float
+
+
 class AskResponse(BaseModel):
     answer: str
     sources: list[SourceItem]
+    images: list[ImageItem] = []  # Local textbook figures
+    visual_required: bool = False  # Whether visual explanation was recommended & found
+    visual: VisualItem | None = None  # Selected online visual explanation diagram
 
 
 class TranscribeResponse(BaseModel):
