@@ -3,9 +3,9 @@ from __future__ import annotations
 
 import numpy as np
 
-from app.config import settings
-from app.embeddings import embed_query
-from app.vector_store import VectorStore
+from backend.common.config import settings
+from backend.common.embeddings import embed_query
+from backend.common.vector_store import VectorStore
 
 
 def retrieve(store: VectorStore, question: str, k: int | None = None) -> list[dict]:

@@ -14,10 +14,11 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # Project root = parent of `app/`
-    project_root: Path = Path(__file__).resolve().parent.parent
+    # Project root = parent of `backend/`
+    project_root: Path = Path(__file__).resolve().parent.parent.parent
     resource_dir: Path = Path("Resource")
     data_dir: Path = Path("data")
+    frontend_dir: Path = Path("frontend")
 
     # Ingest-time: "local" = sentence-transformers, "openai" = OpenAI embeddings (needs API key)
     embedding_provider: Literal["local", "openai"] = "local"
@@ -54,6 +55,10 @@ class Settings(BaseSettings):
 
     def resolved_data_dir(self) -> Path:
         p = self.data_dir
+        return p if p.is_absolute() else (self.project_root / p)
+
+    def resolved_frontend_dir(self) -> Path:
+        p = self.frontend_dir
         return p if p.is_absolute() else (self.project_root / p)
 
 

@@ -8,8 +8,8 @@ from pathlib import Path
 import faiss  # type: ignore
 import numpy as np
 
-from app.chunking import Chunk
-from app.config import settings
+from backend.common.chunking import Chunk
+from backend.common.config import settings
 
 
 class VectorStore:

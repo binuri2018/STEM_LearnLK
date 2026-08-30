@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from app.config import settings
+from backend.common.config import settings
 
 
 @dataclass

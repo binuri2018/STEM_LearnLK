@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from app.config import settings
+from backend.common.config import settings
 
 
 def manifest_path(data_dir: Path) -> Path:

@@ -1,6 +1,5 @@
 /* ==========================================================
-   STEM Learn LK - App JS
-   SPA routing + Voice Tutor logic
+   STEM Learn LK - Voice Tutor JS
    ========================================================== */
 
 const API = "";
@@ -8,49 +7,11 @@ const API = "";
 const $ = (id) => document.getElementById(id);
 
 /* ──────────────────────────────────────────────────────────
-   SPA NAVIGATION
-   ────────────────────────────────────────────────────────── */
-
-const PAGES = ["home", "narrative", "voice", "quiz", "maps"];
-
-function navigateTo(page) {
-  if (!PAGES.includes(page)) page = "home";
-
-  // Toggle page sections
-  PAGES.forEach((p) => {
-    const el = $(`page-${p}`);
-    if (el) el.classList.toggle("active", p === page);
-  });
-
-  // Update sidebar nav active state
-  document.querySelectorAll(".nav-item").forEach((btn) => {
-    const isActive = btn.dataset.page === page;
-    btn.classList.toggle("active", isActive);
-    if (isActive) btn.setAttribute("aria-current", "page");
-    else btn.removeAttribute("aria-current");
-  });
-
-  // If navigating to Voice Tutor, check health
-  if (page === "voice") refreshHealth();
-
-  // Scroll content area to top
-  const ca = document.querySelector(".content-area");
-  if (ca) ca.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-// Wire up all [data-page] buttons (nav items, module cards, back buttons)
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-page]");
-  if (btn) navigateTo(btn.dataset.page);
-});
-
-/* ──────────────────────────────────────────────────────────
    HEALTH CHECK
    ────────────────────────────────────────────────────────── */
 
 async function refreshHealth() {
   const pill = $("health-pill");
-  const pillHome = $("health-pill-home");
   try {
     const r = await fetch(`${API}/api/health`);
     const j = await r.json();
@@ -58,20 +19,25 @@ async function refreshHealth() {
       ? j.openai_configured ? "Index ready · OpenAI on" : "Index ready · Ollama"
       : "No index — run ingest.py";
     const cls = j.index_loaded ? "health-pill ok" : "health-pill bad";
-    if (pill) { pill.textContent = label; pill.className = cls; }
-    if (pillHome) { pillHome.textContent = j.index_loaded ? "Ready" : "No index"; pillHome.className = cls.replace("health-pill", "stat-value"); }
+    if (pill) {
+      pill.textContent = label;
+      pill.className = cls;
+    }
   } catch {
-    if (pill) { pill.textContent = "API unreachable"; pill.className = "health-pill bad"; }
-    if (pillHome) { pillHome.textContent = "Offline"; }
+    if (pill) {
+      pill.textContent = "API unreachable";
+      pill.className = "health-pill bad";
+    }
   }
 }
 
 /* ──────────────────────────────────────────────────────────
-   VOICE TUTOR — ASK
+   VOICE TUTOR — ASK & ANSWER
    ────────────────────────────────────────────────────────── */
 
 function renderSources(items) {
   const el = $("sources");
+  if (!el) return;
   el.innerHTML = "";
   if (!items.length) {
     el.innerHTML = "<p class=\"source-meta\">No chunks retrieved.</p>";
@@ -140,7 +106,7 @@ async function ask() {
 }
 
 /* ──────────────────────────────────────────────────────────
-   VOICE INPUT (Whisper)
+   VOICE INPUT (Whisper Transcription)
    ────────────────────────────────────────────────────────── */
 
 let mediaRecorder = null;
@@ -198,7 +164,7 @@ async function sendTranscribe(blob) {
 }
 
 /* ──────────────────────────────────────────────────────────
-   TTS
+   TTS (Text-to-Speech)
    ────────────────────────────────────────────────────────── */
 
 function browserTts(text, langMode) {
@@ -236,19 +202,23 @@ async function playTts() {
 }
 
 /* ──────────────────────────────────────────────────────────
-   EVENT LISTENERS
+   EVENT LISTENERS & INIT
    ────────────────────────────────────────────────────────── */
 
-$("btn-ask").addEventListener("click", ask);
-$("btn-mic").addEventListener("click", toggleMic);
-$("btn-tts").addEventListener("click", playTts);
-$("question").addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask();
+document.addEventListener("DOMContentLoaded", () => {
+  const btnAsk = $("btn-ask");
+  const btnMic = $("btn-mic");
+  const btnTts = $("btn-tts");
+  const questionEl = $("question");
+
+  if (btnAsk) btnAsk.addEventListener("click", ask);
+  if (btnMic) btnMic.addEventListener("click", toggleMic);
+  if (btnTts) btnTts.addEventListener("click", playTts);
+  if (questionEl) {
+    questionEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask();
+    });
+  }
+
+  refreshHealth();
 });
-
-/* ──────────────────────────────────────────────────────────
-   INIT
-   ────────────────────────────────────────────────────────── */
-
-// Kick off initial health check for home page pill
-refreshHealth();

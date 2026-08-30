@@ -4,7 +4,7 @@ from __future__ import annotations
 import httpx
 from openai import OpenAI
 
-from app.config import settings
+from backend.common.config import settings
 
 BASE_SYSTEM = (
     "You are a helpful Sri Lankan OL science tutor. Answer the student's question clearly and accurately "

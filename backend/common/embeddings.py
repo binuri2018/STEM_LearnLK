@@ -13,7 +13,7 @@ from typing import Any
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from app.config import settings
+from backend.common.config import settings
 
 logger = logging.getLogger(__name__)
 

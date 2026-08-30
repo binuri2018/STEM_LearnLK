@@ -22,13 +22,13 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from app.chunking import Chunk, chunk_pages
-from app.config import settings
-from app.embeddings import embed_texts_for_ingest
-from app.index_manifest import save_manifest
-from app.metadata_infer import infer_from_path
-from app.pdf_extract import extract_pages
-from app.vector_store import VectorStore
+from backend.common.chunking import Chunk, chunk_pages
+from backend.common.config import settings
+from backend.common.embeddings import embed_texts_for_ingest
+from backend.common.index_manifest import save_manifest
+from backend.common.metadata_infer import infer_from_path
+from backend.common.pdf_extract import extract_pages
+from backend.common.vector_store import VectorStore
 
 
 def collect_pdfs(resource_dir: Path) -> list[Path]:

@@ -5,7 +5,7 @@ from io import BytesIO
 
 from openai import OpenAI
 
-from app.config import settings
+from backend.common.config import settings
 
 _VALID_VOICES = frozenset({"alloy", "echo", "fable", "onyx", "nova", "shimmer"})
 

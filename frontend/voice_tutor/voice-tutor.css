@@ -1,0 +1,192 @@
+/* =========================================================
+   STEM Learn LK - Voice Tutor Styles
+   ========================================================= */
+
+/* ─── HEALTH PILL ─── */
+.health-pill {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.health-pill.ok  { border-color: #86efac; color: #16a34a; background: #f0fdf4; }
+.health-pill.bad { border-color: #fca5a5; color: var(--danger); background: #fef2f2; }
+
+/* ─── VOICE TUTOR LAYOUT ─── */
+.tutor-layout {
+  display: flex;
+  gap: 1.25rem;
+  flex-direction: column;
+}
+
+@media (min-width: 780px) {
+  .tutor-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .ask-panel   { flex: 1 1 42%; }
+  .answer-panel{ flex: 1 1 55%; }
+}
+
+/* ─── PANELS ─── */
+.panel {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.35rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.toolbar { margin-bottom: 1rem; }
+
+.field-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.select {
+  width: 100%;
+  max-width: 320px;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 100px;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.12s;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: filter 0.12s, background 0.12s, border-color 0.12s, box-shadow 0.12s;
+}
+
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent-dim);
+}
+
+.btn.primary:hover:not(:disabled) { filter: brightness(1.06); box-shadow: 0 2px 8px rgba(0,200,150,0.3); }
+
+.btn.ghost {
+  background: var(--bg);
+  border-color: var(--border);
+  color: var(--text-sub);
+}
+
+.btn.ghost:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-dim);
+  background: var(--accent-light);
+}
+
+.mic-icon { color: var(--danger); font-size: 0.75rem; }
+
+.btn.recording .mic-icon { animation: pulse 1s ease infinite; }
+
+@keyframes pulse { 50% { opacity: 0.3; } }
+
+.hint {
+  margin: 1rem 0 0;
+  font-size: 0.76rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.hint code {
+  font-size: 0.85em;
+  background: var(--bg);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 0.6rem;
+}
+
+.sources-title { margin-top: 1.25rem; }
+
+.answer-box {
+  font-size: 0.97rem;
+  white-space: pre-wrap;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  min-height: 5rem;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.answer-box.muted { color: var(--muted); }
+
+.sources { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.source-card {
+  font-size: 0.84rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.source-card strong { color: var(--accent-dim); font-weight: 600; }
+
+.source-meta { color: var(--muted); font-size: 0.77rem; margin-top: 3px; }
