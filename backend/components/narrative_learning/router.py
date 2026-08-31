@@ -3,7 +3,14 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
-from backend.components.narrative_learning.schemas import GenerateRequest, GenerateResponse
+from backend.components.narrative_learning.classifier import classify, log_theme_feedback, survey_spec
+from backend.components.narrative_learning.schemas import (
+    ClassifyRequest,
+    ClassifyResponse,
+    GenerateRequest,
+    GenerateResponse,
+    ThemeFeedbackRequest,
+)
 from backend.components.narrative_learning.syllabus_data import CHAPTER_MAP
 
 router = APIRouter(prefix="/narrative-learning", tags=["Narrative Learning"])
@@ -24,11 +31,31 @@ def _get_engine():
 def status() -> dict:
     from backend.components.narrative_learning.model_config import VECTOR_DB_DIR
 
+    spec = survey_spec()
     return {
         "status": "ready",
         "module": "Narrative Learning",
         "index_path": VECTOR_DB_DIR,
+        "classifier_mode": spec["classifier_mode"],
+        "output_label": spec["output_label"],
     }
+
+
+@router.get("/survey")
+def survey() -> dict:
+    return survey_spec()
+
+
+@router.post("/classify", response_model=ClassifyResponse)
+def classify_student(body: ClassifyRequest) -> ClassifyResponse:
+    result = classify(body.model_dump())
+    return ClassifyResponse(**result)
+
+
+@router.post("/theme-feedback")
+def theme_feedback(body: ThemeFeedbackRequest) -> dict:
+    log_theme_feedback(body.theme, body.matched, body.interest, body.aspiration)
+    return {"ok": True}
 
 
 @router.get("/chapters")
@@ -46,7 +73,19 @@ def generate(body: GenerateRequest) -> GenerateResponse:
             detail=f"Narrative engine is not ready: {exc}",
         ) from exc
 
-    theme = engine.get_theme_for_student(body.interest, body.aspiration)
+    if (body.theme or "").strip():
+        theme = body.theme.strip()
+        classified = {"method": "preclassified", "theme": theme}
+    else:
+        classified = classify({
+            "grade": body.grade,
+            "interest": body.interest,
+            "aspiration": body.aspiration,
+            "struggle_level": body.struggle_level,
+            "story_style": body.story_style,
+            "story_opening": body.story_opening,
+        })
+        theme = classified["theme"]
     data = engine.generate_chapter(
         student_theme=theme,
         topic=body.topic,
@@ -61,6 +100,7 @@ def generate(body: GenerateRequest) -> GenerateResponse:
 
     return GenerateResponse(
         theme=theme,
+        classifier_method=classified.get("method") or "",
         science_intro=data.get("science_intro") or {},
         story=data.get("story") or "",
         key_definitions=data.get("key_definitions") or [],

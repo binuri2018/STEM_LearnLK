@@ -2,10 +2,32 @@ const API = "";
 
 const $ = (id) => document.getElementById(id);
 
+let surveyQuestions = [];
+let qIndex = 0;
+let answers = {};
+let profile = null;
+let themeBlurbs = {};
+
 function escapeHtml(s) {
   const d = document.createElement("div");
   d.textContent = s == null ? "" : String(s);
   return d.innerHTML;
+}
+
+function showPanel(id) {
+  ["step-survey", "step-theme", "step-topic"].forEach((pid) => {
+    const el = $(pid);
+    if (el) el.classList.toggle("hidden", pid !== id);
+  });
+  const phase = id === "step-survey" ? "survey" : id === "step-theme" ? "theme" : "topic";
+  setPhase(phase);
+}
+
+function setPhase(phase) {
+  const ws = $("workspace");
+  if (!ws) return;
+  ws.classList.remove("phase-survey", "phase-theme", "phase-topic", "phase-story");
+  ws.classList.add(`phase-${phase}`);
 }
 
 async function refreshStatus() {
@@ -19,6 +41,45 @@ async function refreshStatus() {
     pill.textContent = "API offline";
     pill.className = "health-pill bad";
   }
+}
+
+function renderDots() {
+  const root = $("q-dots");
+  root.innerHTML = surveyQuestions.map((_, i) =>
+    `<span class="dot${i === qIndex ? " on" : ""}${answers[surveyQuestions[i].id] ? " done" : ""}"></span>`
+  ).join("");
+}
+
+function renderQuestion() {
+  const q = surveyQuestions[qIndex];
+  if (!q) return;
+  $("q-count").textContent = `Question ${qIndex + 1} of ${surveyQuestions.length}`;
+  $("q-prompt").textContent = q.prompt;
+  const picked = answers[q.id];
+  $("q-options").innerHTML = (q.options || []).map((o) => {
+    const sel = picked === o.value ? " selected" : "";
+    return `<button type="button" class="choice-btn${sel}" data-value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</button>`;
+  }).join("");
+  $("q-options").querySelectorAll(".choice-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      answers[q.id] = btn.dataset.value;
+      renderQuestion();
+    });
+  });
+  $("btn-q-back").disabled = qIndex === 0;
+  $("btn-q-next").textContent = qIndex === surveyQuestions.length - 1 ? "See my style" : "Next";
+  renderDots();
+}
+
+async function loadSurvey() {
+  const r = await fetch(`${API}/api/narrative-learning/survey`);
+  if (!r.ok) throw new Error("Could not load questions");
+  const data = await r.json();
+  surveyQuestions = data.questions || [];
+  themeBlurbs = data.theme_blurbs || {};
+  qIndex = 0;
+  answers = {};
+  renderQuestion();
 }
 
 async function loadChapters() {
@@ -112,19 +173,98 @@ function renderSources(sources) {
   }).join("");
 }
 
-async function generateStory() {
-  const btn = $("btn-generate");
+async function goNext() {
+  const q = surveyQuestions[qIndex];
   const err = $("error-box");
   err.classList.add("hidden");
+  if (!answers[q.id]) {
+    err.textContent = "Pick one, then tap Next.";
+    err.classList.remove("hidden");
+    return;
+  }
+  if (qIndex < surveyQuestions.length - 1) {
+    qIndex += 1;
+    renderQuestion();
+    return;
+  }
+  await classifyStudent();
+}
+
+function goBack() {
+  if (qIndex === 0) return;
+  qIndex -= 1;
+  renderQuestion();
+}
+
+async function classifyStudent() {
+  const err = $("error-box");
+  err.classList.add("hidden");
+  const btn = $("btn-q-next");
+  btn.disabled = true;
+  try {
+    const r = await fetch(`${API}/api/narrative-learning/classify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(answers),
+    });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.detail || r.statusText);
+    profile = { ...answers, ...data };
+    $("theme-name").textContent = data.theme;
+    $("theme-blurb").textContent = data.blurb || themeBlurbs[data.theme] || "";
+    showPanel("step-theme");
+  } catch (e) {
+    err.textContent = e.message || "Could not pick a style.";
+    err.classList.remove("hidden");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function sendThemeFeedback(matched) {
+  if (!profile) return;
+  try {
+    await fetch(`${API}/api/narrative-learning/theme-feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        theme: profile.theme,
+        matched,
+        interest: profile.interest || "",
+        aspiration: profile.aspiration || "",
+      }),
+    });
+  } catch {
+    /* keep going even if log fails */
+  }
+  $("theme-summary").textContent = `Story style: ${profile.theme}`;
+  showPanel("step-topic");
+  $("study-panel").classList.remove("hidden");
+  setPhase("topic");
+}
+
+async function generateStory() {
+  const btn = $("btn-generate");
+  const err = $("error-box-topic");
+  err.classList.add("hidden");
   err.textContent = "";
+  if (!profile) {
+    err.textContent = "Please answer the questions first.";
+    err.classList.remove("hidden");
+    return;
+  }
   btn.disabled = true;
   btn.textContent = "Writing…";
   $("results").classList.add("hidden");
 
   const body = {
-    interest: $("interest").value,
-    aspiration: $("aspiration").value,
-    struggle_level: $("struggle").value,
+    interest: profile.interest,
+    aspiration: profile.aspiration,
+    struggle_level: profile.struggle_level,
+    grade: profile.grade || "",
+    story_style: profile.story_style || "",
+    story_opening: profile.story_opening || "",
+    theme: profile.theme || "",
     book: $("book").value,
     topic: $("topic").value,
     diagnostic: $("diagnostic").value.trim() || "Explain the core concept in simple terms.",
@@ -146,7 +286,10 @@ async function generateStory() {
     renderSources(data.sources || []);
     const quizTopic = encodeURIComponent(data.quiz_topic || body.topic);
     $("quiz-link").href = `/adaptive-quiz?topic=${quizTopic}`;
+    $("step-topic").classList.add("hidden");
     $("results").classList.remove("hidden");
+    $("study-panel").classList.remove("hidden");
+    setPhase("story");
     $("results").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (e) {
     err.textContent = e.message || "Story generation failed.";
@@ -158,10 +301,21 @@ async function generateStory() {
 }
 
 $("book").addEventListener("change", fillTopics);
+$("btn-q-next").addEventListener("click", goNext);
+$("btn-q-back").addEventListener("click", goBack);
+$("btn-theme-yes").addEventListener("click", () => sendThemeFeedback(true));
+$("btn-theme-no").addEventListener("click", () => sendThemeFeedback(false));
 $("btn-generate").addEventListener("click", generateStory);
+$("btn-back-survey").addEventListener("click", () => {
+  $("study-panel").classList.add("hidden");
+  $("results").classList.add("hidden");
+  showPanel("step-survey");
+  setPhase("survey");
+  renderQuestion();
+});
 
 refreshStatus();
-loadChapters().catch((e) => {
+Promise.all([loadSurvey(), loadChapters()]).catch((e) => {
   $("error-box").textContent = e.message;
   $("error-box").classList.remove("hidden");
 });

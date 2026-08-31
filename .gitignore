@@ -9,3 +9,6 @@ data/
 science_vector_db/
 !backend/components/narrative_learning/persona_model.pkl
 !backend/components/narrative_learning/encoder.pkl
+RP SURVEY*.xlsx
+*.xlsx
+backend/components/narrative_learning/training_rows.csv
