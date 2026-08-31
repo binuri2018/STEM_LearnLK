@@ -46,11 +46,11 @@ const ScoreCircle = ({ score }) => {
 };
 
 const SESSION_CFG = {
-  review:    { bg: 'rgba(239,68,68,0.10)',   border: 'rgba(239,68,68,0.28)',   text: '#fca5a5', icon: '📚' },
-  practice:  { bg: 'rgba(99,102,241,0.10)',  border: 'rgba(99,102,241,0.28)',  text: '#a5b4fc', icon: '🔄' },
-  quiz:      { bg: 'rgba(168,85,247,0.10)',  border: 'rgba(168,85,247,0.28)',  text: '#c4b5fd', icon: '📝' },
-  flashcard: { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.28)',  text: '#fcd34d', icon: '⚡' },
-  advanced:  { bg: 'rgba(34,197,94,0.10)',   border: 'rgba(34,197,94,0.28)',   text: '#86efac', icon: '🚀' },
+  review:    { bg: 'rgba(239,68,68,0.10)',   border: 'rgba(239,68,68,0.28)',   text: '#dc2626', icon: '📚' },
+  practice:  { bg: 'rgba(99,102,241,0.10)',  border: 'rgba(99,102,241,0.28)',  text: '#4f46e5', icon: '🔄' },
+  quiz:      { bg: 'rgba(168,85,247,0.10)',  border: 'rgba(168,85,247,0.28)',  text: '#7c3aed', icon: '📝' },
+  flashcard: { bg: 'rgba(245,158,11,0.10)',  border: 'rgba(245,158,11,0.28)',  text: '#d97706', icon: '⚡' },
+  advanced:  { bg: 'rgba(34,197,94,0.10)',   border: 'rgba(34,197,94,0.28)',   text: '#16a34a', icon: '🚀' },
 };
 
 const INTENSITY_LABEL = { light: 'Light Load', medium: 'Medium Intensity', intensive: 'Intensive Mode' };
@@ -255,6 +255,9 @@ const ReportPage = () => {
 
         {/* Header */}
         <div className="report-header">
+          <a href="/" className="btn-back-home" title="Back to STEM Learn LK home">
+            ← Home
+          </a>
           <h1 className="report-title">📊 Assessment Report</h1>
           <p className="report-meta">{lesson?.title} · {student?.name}</p>
           <button id="btn-download-pdf" className="btn-download-pdf" onClick={() => window.print()}>
@@ -362,7 +365,7 @@ const ReportPage = () => {
             {generateStudyPlan(report).map((item, idx) => {
               const typeConfig = {
                 conceptual: { color: '#ef4444', bg: 'rgba(239,68,68,0.08)',  border: 'rgba(239,68,68,0.22)',  badge: 'Review Needed',    badgeBg: 'rgba(239,68,68,0.15)' },
-                behavioral: { color: '#a78bfa', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.22)', badge: 'Behavior Insight', badgeBg: 'rgba(167,139,250,0.15)' },
+                behavioral: { color: '#7c3aed', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.22)', badge: 'Behavior Insight', badgeBg: 'rgba(167,139,250,0.15)' },
                 resource:   { color: '#22c55e', bg: 'rgba(34,197,94,0.08)',  border: 'rgba(34,197,94,0.22)',  badge: 'Next Action',      badgeBg: 'rgba(34,197,94,0.15)' },
               };
               const cfg = typeConfig[item.type] || typeConfig.resource;

@@ -39,7 +39,7 @@ const ResearchCharts = ({ responses }) => {
       {/* 1. Engagement Timeline */}
       <div className="report-section" style={{ marginTop: '24px' }}>
         <h3 className="section-title">📉 Behavioral Engagement Timeline</h3>
-        <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>
+        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '16px' }}>
           Visualizing emotional valence shifts across the assessment session.
         </p>
         <div style={{ width: '100%', height: 250 }}>
@@ -51,13 +51,13 @@ const ResearchCharts = ({ responses }) => {
                   <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-              <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e9ef" vertical={false} />
+              <XAxis dataKey="name" stroke="#6b7280" fontSize={12} tickLine={false} axisLine={false} />
               <YAxis hide domain={[0, 100]} />
               <Tooltip 
-                contentStyle={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                itemStyle={{ color: '#e2e8f0' }}
-                labelStyle={{ color: '#64748b' }}
+                contentStyle={{ background: '#ffffff', border: '1px solid #e5e9ef', borderRadius: '8px' }}
+                itemStyle={{ color: '#111827' }}
+                labelStyle={{ color: '#6b7280' }}
                 formatter={(value, name, props) => [(props.payload.emotion || 'unknown').toUpperCase(), 'Emotion']}
               />
               <Area 
@@ -77,18 +77,18 @@ const ResearchCharts = ({ responses }) => {
       {/* 2. Cognitive Effort Analysis */}
       <div className="report-section" style={{ marginTop: '24px' }}>
         <h3 className="section-title">📊 Cognitive Effort Analysis</h3>
-        <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '16px' }}>
+        <p style={{ fontSize: '12px', color: '#6b7280', marginBottom: '16px' }}>
           Mapping response time vs. answer revisions to estimate mental load.
         </p>
         <div style={{ width: '100%', height: 250 }}>
           <ResponsiveContainer>
             <BarChart data={loadData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-              <XAxis dataKey="name" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e9ef" vertical={false} />
+              <XAxis dataKey="name" stroke="#6b7280" fontSize={12} tickLine={false} axisLine={false} />
+              <YAxis stroke="#6b7280" fontSize={12} tickLine={false} axisLine={false} />
               <Tooltip 
-                contentStyle={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                contentStyle={{ background: '#ffffff', border: '1px solid #e5e9ef', borderRadius: '8px' }}
+                cursor={{ fill: 'rgba(15,23,42,0.05)' }}
               />
               <Legend verticalAlign="top" height={36}/>
               <Bar name="Time (s)" dataKey="time" fill="#3b82f6" radius={[4, 4, 0, 0]} />

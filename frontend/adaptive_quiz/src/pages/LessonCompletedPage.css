@@ -7,17 +7,17 @@
   padding: 24px;
   background: radial-gradient(ellipse at 20% 30%, rgba(16,185,129,0.1) 0%, transparent 50%),
               radial-gradient(ellipse at 80% 70%, rgba(99,102,241,0.1) 0%, transparent 50%),
-              #070e1a;
+              #f5f7f9;
 }
 
 .lc-card {
-  background: rgba(15,23,42,0.9);
+  background: rgba(255,255,255,0.97);
   border: 1px solid rgba(99,102,241,0.2);
   border-radius: 24px;
   padding: 40px 36px;
   max-width: 580px;
   width: 100%;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  box-shadow: 0 32px 80px rgba(15,23,42,0.12);
   backdrop-filter: blur(12px);
   animation: cardIn 0.5s ease both;
 }
@@ -27,7 +27,7 @@
 }
 
 .lc-loader {
-  display: flex; flex-direction: column; align-items: center; gap: 16px; color: #94a3b8;
+  display: flex; flex-direction: column; align-items: center; gap: 16px; color: #4b5563;
 }
 .spin-ring {
   width: 40px; height: 40px;
@@ -39,8 +39,8 @@
 
 .lc-banner { text-align: center; margin-bottom: 24px; }
 .lc-trophy { font-size: 64px; margin-bottom: 12px; animation: bounce 0.6s ease; }
-.lc-title  { font-size: 28px; font-weight: 800; color: #e2e8f0; margin: 0 0 8px; }
-.lc-subtitle { color: #64748b; font-size: 15px; margin: 0; }
+.lc-title  { font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 8px; }
+.lc-subtitle { color: #6b7280; font-size: 15px; margin: 0; }
 
 .lc-student-chip {
   display: inline-flex;
@@ -51,14 +51,14 @@
   border: 1px solid rgba(99,102,241,0.2);
   border-radius: 99px;
   font-size: 13px;
-  color: #a5b4fc;
+  color: #4f46e5;
   font-weight: 600;
   margin-bottom: 20px;
 }
 
 .lc-lesson-info {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(15,23,42,0.05);
+  border: 1px solid rgba(15,23,42,0.05);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
@@ -69,26 +69,26 @@
   border-radius: 6px;
   background: rgba(16,185,129,0.15);
   border: 1px solid rgba(16,185,129,0.3);
-  color: #34d399;
+  color: #059669;
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 10px;
 }
-.lc-lesson-title { font-size: 20px; font-weight: 700; color: #e2e8f0; margin: 0 0 8px; }
-.lc-lesson-desc  { font-size: 14px; color: #64748b; line-height: 1.6; margin: 0 0 12px; }
+.lc-lesson-title { font-size: 20px; font-weight: 700; color: #111827; margin: 0 0 8px; }
+.lc-lesson-desc  { font-size: 14px; color: #6b7280; line-height: 1.6; margin: 0 0 12px; }
 .lc-meta { display: flex; gap: 16px; }
-.lc-meta span { font-size: 13px; color: #94a3b8; }
+.lc-meta span { font-size: 13px; color: #4b5563; }
 
 .lc-assessment-info {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(15,23,42,0.05);
+  border: 1px solid rgba(15,23,42,0.05);
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 20px;
 }
-.lc-assessment-info h3 { font-size: 15px; color: #94a3b8; font-weight: 700; margin: 0 0 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+.lc-assessment-info h3 { font-size: 15px; color: #4b5563; font-weight: 700; margin: 0 0 14px; text-transform: uppercase; letter-spacing: 0.5px; }
 .lc-levels { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
 .lc-level-item {
   display: flex;
@@ -99,18 +99,18 @@
   border-radius: 10px;
   transition: background 0.15s ease;
 }
-.lc-level-item:hover { background: rgba(255,255,255,0.03); }
+.lc-level-item:hover { background: rgba(15,23,42,0.05); }
 .lc-level-item div { display: flex; flex-direction: column; }
-.lc-level-item strong { font-size: 14px; color: #e2e8f0; font-weight: 700; }
-.lc-level-item span  { font-size: 13px; color: #64748b; }
-.lc-note { font-size: 13px; color: #475569; line-height: 1.5; margin: 0; }
+.lc-level-item strong { font-size: 14px; color: #111827; font-weight: 700; }
+.lc-level-item span  { font-size: 13px; color: #6b7280; }
+.lc-note { font-size: 13px; color: #9ca3af; line-height: 1.5; margin: 0; }
 
 .lc-error {
   padding: 12px 16px;
   border-radius: 10px;
   background: rgba(239,68,68,0.1);
   border: 1px solid rgba(239,68,68,0.25);
-  color: #fca5a5;
+  color: #dc2626;
   font-size: 13px;
   margin-bottom: 16px;
 }
@@ -155,12 +155,12 @@
 .lc-adaptive-title {
   font-size: 14px;
   font-weight: 800;
-  color: #a5b4fc;
+  color: #4f46e5;
   margin-bottom: 6px;
 }
 .lc-adaptive-note {
   font-size: 13px;
-  color: #64748b;
+  color: #6b7280;
   margin: 0 0 10px;
   line-height: 1.5;
 }
@@ -174,7 +174,7 @@
   border-radius: 8px;
   background: rgba(239,68,68,0.1);
   border: 1px solid rgba(239,68,68,0.25);
-  color: #fca5a5;
+  color: #dc2626;
   font-size: 12px;
   font-weight: 600;
 }

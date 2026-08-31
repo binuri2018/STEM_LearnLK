@@ -53,22 +53,20 @@ const assessmentReducer = (state, action) => {
       return { ...state, responses: [...state.responses, action.payload] };
 
     case 'NEXT_QUESTION': {
-      // Adaptive logic: if a targetLevel is passed (e.g., jump to Level 3 early), use it.
-      const targetLevel = action.payload?.targetLevel || state.currentLevel;
-      const levelKey    = `level${targetLevel}`;
-      const levelQs     = state.allQuestions[levelKey] || [];
-      
-      // If jumping to a new level, start at first question. Otherwise, increment index.
-      let nextIdx = (targetLevel !== state.currentLevel) ? 0 : state.currentQuestionIdx + 1;
+      // Strictly sequential so every student answers the full set: advance within
+      // the current level, then roll to the next level, then finish. Adaptive
+      // difficulty is recorded per-response but never skips or repeats questions.
+      const levelQs   = state.allQuestions[`level${state.currentLevel}`] || [];
+      const nextIdx   = state.currentQuestionIdx + 1;
 
       if (nextIdx < levelQs.length) {
-        return { ...state, currentLevel: targetLevel, currentQuestionIdx: nextIdx };
+        return { ...state, currentQuestionIdx: nextIdx };
       }
 
-      // Level complete — move to next level naturally or finish
-      const nextNaturalLevel = targetLevel + 1;
-      if (nextNaturalLevel <= 3) {
-        return { ...state, currentLevel: nextNaturalLevel, currentQuestionIdx: 0 };
+      // Level complete — move to the next level or finish
+      const nextLevel = state.currentLevel + 1;
+      if (nextLevel <= 3) {
+        return { ...state, currentLevel: nextLevel, currentQuestionIdx: 0 };
       }
 
       // All levels exhausted

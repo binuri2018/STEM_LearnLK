@@ -1,6 +1,6 @@
 .expression-quest {
   max-width: 450px;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95));
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(15, 23, 42, 0.95));
   border: 2px solid #6366f1;
   box-shadow: 0 0 50px rgba(99, 102, 241, 0.3);
 }
@@ -37,15 +37,15 @@
 
 .gauge-fill {
   height: 100%;
-  background: linear-gradient(90deg, #6366f1, #4ade80);
+  background: linear-gradient(90deg, #6366f1, #16a34a);
   transition: width 0.1s linear;
-  box-shadow: 0 0 15px #4ade80;
+  box-shadow: 0 0 15px #16a34a;
 }
 
 .current-detected {
   margin-top: 15px;
   font-size: 14px;
-  color: #94a3b8;
+  color: #4b5563;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -58,7 +58,7 @@
 .quest-status {
   height: 20px;
   font-weight: 800;
-  color: #4ade80;
+  color: #16a34a;
   letter-spacing: 2px;
 }
 

@@ -6,19 +6,19 @@
   justify-content: center;
   background: radial-gradient(ellipse at 30% 20%, rgba(99,102,241,0.15) 0%, transparent 60%),
               radial-gradient(ellipse at 70% 80%, rgba(168,85,247,0.1) 0%, transparent 60%),
-              #070e1a;
+              #f5f7f9;
   padding: 20px;
 }
 
 .login-card {
-  background: rgba(15,23,42,0.9);
+  background: rgba(255,255,255,0.97);
   border: 1px solid rgba(99,102,241,0.25);
   border-radius: 20px;
   padding: 40px 36px;
   width: 100%;
   max-width: 440px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  box-shadow: 0 24px 64px rgba(15,23,42,0.12);
   animation: cardIn 0.5s ease both;
 }
 @keyframes cardIn {
@@ -28,16 +28,16 @@
 
 .login-header { text-align: center; margin-bottom: 28px; }
 .login-logo   { font-size: 48px; margin-bottom: 12px; }
-.login-title  { font-size: 24px; font-weight: 800; color: #e2e8f0; margin: 0 0 6px; }
-.login-subtitle { font-size: 13px; color: #64748b; margin: 0; }
+.login-title  { font-size: 24px; font-weight: 800; color: #111827; margin: 0 0 6px; }
+.login-subtitle { font-size: 13px; color: #6b7280; margin: 0; }
 
 .login-tabs {
   display: flex;
-  background: rgba(255,255,255,0.04);
+  background: rgba(15,23,42,0.05);
   border-radius: 10px;
   padding: 4px;
   margin-bottom: 24px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(15,23,42,0.05);
 }
 .tab-btn {
   flex: 1;
@@ -45,7 +45,7 @@
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #64748b;
+  color: #6b7280;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -60,30 +60,30 @@
 .login-form { display: flex; flex-direction: column; gap: 16px; }
 
 .form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-group label { font-size: 13px; font-weight: 600; color: #94a3b8; }
+.form-group label { font-size: 13px; font-weight: 600; color: #4b5563; }
 .form-group input,
 .form-group select {
   padding: 11px 14px;
-  border: 1.5px solid #1e293b;
+  border: 1.5px solid #e5e9ef;
   border-radius: 10px;
-  background: rgba(255,255,255,0.04);
-  color: #e2e8f0;
+  background: rgba(15,23,42,0.05);
+  color: #111827;
   font-size: 14px;
   transition: border-color 0.2s;
   outline: none;
 }
 .form-group input:focus,
 .form-group select:focus { border-color: #6366f1; background: rgba(99,102,241,0.06); }
-.form-group input::placeholder { color: #475569; }
+.form-group input::placeholder { color: #9ca3af; }
 
-.form-group select option { background: #1e293b; color: #e2e8f0; }
+.form-group select option { background: #e5e9ef; color: #111827; }
 
 .form-error {
   padding: 10px 14px;
   border-radius: 10px;
   background: rgba(239,68,68,0.1);
   border: 1px solid rgba(239,68,68,0.25);
-  color: #fca5a5;
+  color: #dc2626;
   font-size: 13px;
 }
 
@@ -98,7 +98,7 @@
 }
 .field-error {
   font-size: 12px;
-  color: #fca5a5;
+  color: #dc2626;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -106,7 +106,7 @@
 .field-error::before { content: '⚠'; font-size: 11px; }
 .field-hint {
   font-size: 12px;
-  color: #475569;
+  color: #9ca3af;
 }
 
 .btn-primary {
@@ -132,7 +132,7 @@
 .btn-primary:active:not(:disabled) { transform: translateY(0); }
 .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.tab-btn:hover:not(.active) { color: #94a3b8; background: rgba(255,255,255,0.04); }
+.tab-btn:hover:not(.active) { color: #4b5563; background: rgba(15,23,42,0.05); }
 
 .spinner {
   width: 18px;

@@ -10,9 +10,9 @@
   border: 1px solid transparent;
   transition: all 0.3s ease;
 }
-.timer-badge.normal  { background: rgba(99,102,241,0.12); color: #a5b4fc; border-color: rgba(99,102,241,0.25); }
-.timer-badge.warning { background: rgba(245,158,11,0.12); color: #fcd34d; border-color: rgba(245,158,11,0.35); }
-.timer-badge.danger  { background: rgba(239,68,68,0.12);  color: #fca5a5; border-color: rgba(239,68,68,0.35); animation: timerPulse 1s infinite; }
+.timer-badge.normal  { background: rgba(99,102,241,0.12); color: #4f46e5; border-color: rgba(99,102,241,0.25); }
+.timer-badge.warning { background: rgba(245,158,11,0.12); color: #d97706; border-color: rgba(245,158,11,0.35); }
+.timer-badge.danger  { background: rgba(239,68,68,0.12);  color: #dc2626; border-color: rgba(239,68,68,0.35); animation: timerPulse 1s infinite; }
 .timer-icon   { font-size: 14px; }
 .timer-display { font-variant-numeric: tabular-nums; letter-spacing: 1px; }
 @keyframes timerPulse {

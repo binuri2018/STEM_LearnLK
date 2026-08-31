@@ -145,7 +145,10 @@ const AssessmentPage = () => {
     }
     setLearningState(predictedState);
 
-    // 2. Calculate Cognitive Load & Adaptive Next Level
+    // 2. Calculate Cognitive Load & the adaptive difficulty *signal*.
+    // NOTE: this only labels the response for the report/research layer — it does
+    // NOT reroute the quiz. Every student answers all 9 questions (3 per level,
+    // Level 1 → 2 → 3) so the assessment is complete and comparable across students.
     const load = calculateCognitiveLoad({ responseTime, answerChanges, expression });
     const isLastInLevel = currentQuestionIdx === currentQuestions.length - 1;
     const target = isLastInLevel
@@ -200,8 +203,11 @@ const AssessmentPage = () => {
   };
 
   // ── Advance to next question ───────────────────────────────────────────────
+  // Always sequential: Level 1 (3 Qs) → Level 2 (3 Qs) → Level 3 (3 Qs) = 9 total.
+  // The adaptive difficulty stays a recorded signal (nextTargetLevel) but never
+  // skips or repeats questions, so every student sees the full 9-question set.
   const handleNext = () => {
-    nextQuestion(nextTargetLevel);
+    nextQuestion(currentLevel);
   };
 
   // ── Handle voice commands (REGISTERED GLOBALLY) ───────────────────────────
@@ -412,7 +418,9 @@ const AssessmentPage = () => {
 
           {/* Question meta */}
           <div className="question-meta">
-            <span className="question-num">Q{currentQuestionIdx + 1}</span>
+            <span className="question-num">
+              Question {(currentLevel - 1) * currentQuestions.length + currentQuestionIdx + 1}
+            </span>
             <span className="concept-tag">🏷 {currentQuestion.conceptTag}</span>
             {submitted && learningState && (
               <span className="state-badge" style={{ background: getLearningStateColor(learningState) + '22', color: getLearningStateColor(learningState), border: `1px solid ${getLearningStateColor(learningState)}44` }}>

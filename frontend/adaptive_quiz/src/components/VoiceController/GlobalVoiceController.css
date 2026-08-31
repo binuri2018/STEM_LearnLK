@@ -8,11 +8,11 @@
   padding: 8px 16px;
   background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(15,23,42,0.06);
   border-radius: 40px;
   z-index: 9999;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(15,23,42,0.08);
 }
 
 .global-voice-indicator.active {
@@ -71,7 +71,7 @@
   border: 1px solid rgba(99, 102, 241, 0.3);
   animation: slideIn 0.2s ease-out;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(15,23,42,0.08);
 }
 
 @keyframes slideIn {
@@ -80,12 +80,12 @@
 }
 
 .active .status-text {
-  color: #818cf8;
+  color: #4f46e5;
 }
 
 .last-cmd {
   font-size: 13px;
-  color: #e2e8f0;
+  color: #111827;
   font-style: italic;
   max-width: 150px;
   white-space: nowrap;

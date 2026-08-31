@@ -55,8 +55,9 @@ _model: Any = None
 _model_lock = threading.Lock()
 _load_error: str | None = None
 
-# YOLO inference on CPU is heavy (~seconds). Run it on a dedicated single worker
-# so a burst of webcam frames can never starve the pool used by /predict and Mongo.
+# This 3-class detector is light (~25-30 ms/frame on CPU at imgsz=256). Run it on a
+# dedicated single worker so a burst of webcam frames can never starve the pool used
+# by /predict and Mongo, and so frames are analysed one at a time (single-flight).
 emotion_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="emotion")
 
 
@@ -138,6 +139,18 @@ def _detect_pick_class(
         if near_win or smile_lift:
             best_cid = best_happy
 
+    # Neutral tie-break: this model over-fires "negative" on noisy frames, so if the
+    # winner is frustrated but a neutral box scored nearly as high, prefer neutral.
+    if map_to_expression(raw_name(best_cid), label_map) == "frustrated":
+        neutral_ids = [
+            cid for cid in scores_by_class
+            if map_to_expression(raw_name(cid), label_map) == "neutral"
+        ]
+        if neutral_ids:
+            best_neutral = max(neutral_ids, key=lambda c: scores_by_class[c])
+            if scores_by_class[best_neutral] >= scores_by_class[best_cid] * 0.75:
+                best_cid = best_neutral
+
     return best_cid, float(conf_by_class.get(best_cid, 0.0))
 
 
@@ -169,6 +182,21 @@ def get_model():
             _load_error = str(e)
             log.exception("Failed to load YOLO model: %s", e)
             return None
+
+
+def _gate_expression(expr: str, conf: float) -> tuple[str, float]:
+    """Fall back to neutral when the model isn't confident enough.
+
+    The webcam feed is often dim / off-angle and this valence model over-reports
+    "negative" on such frames, so a frustrated read must clear a higher bar than
+    a neutral/positive one. When unsure we return neutral rather than guessing.
+    """
+    if expr == "neutral":
+        return expr, conf
+    floor = settings.emotion_negative_min_conf if expr == "frustrated" else settings.emotion_min_conf
+    if conf < floor:
+        return "neutral", conf
+    return expr, conf
 
 
 def analyze_frame(frame_b64: str) -> tuple[str, float]:
@@ -209,7 +237,8 @@ def analyze_frame(frame_b64: str) -> tuple[str, float]:
             raw = names.get(top1, str(top1))
             if isinstance(raw, (list, tuple)) and raw:
                 raw = raw[0]
-            return map_to_expression(str(raw), label_map), round(min(max(conf, 0.0), 1.0), 4)
+            expr = map_to_expression(str(raw), label_map)
+            return _gate_expression(expr, round(min(max(conf, 0.0), 1.0), 4))
 
         boxes = getattr(r, "boxes", None)
         if boxes is not None and len(boxes):
@@ -233,7 +262,8 @@ def analyze_frame(frame_b64: str) -> tuple[str, float]:
             raw = names.get(cid, names.get(str(cid), str(cid)))
             if isinstance(raw, (list, tuple)) and raw:
                 raw = raw[0]
-            return map_to_expression(str(raw), label_map), round(min(max(conf, 0.0), 1.0), 4)
+            expr = map_to_expression(str(raw), label_map)
+            return _gate_expression(expr, round(min(max(conf, 0.0), 1.0), 4))
 
         return "neutral", 0.0
     except Exception:  # noqa: BLE001

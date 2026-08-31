@@ -20,10 +20,11 @@ const EMOTION_DETECT_URL =
   `${API_BASE.replace(/\/$/, '')}/detect-emotion`;
 
 // How often (ms) to sample a frame and call the emotion endpoint.
-// CPU YOLO inference is slow, so poll gently and never overlap requests.
-const CAPTURE_INTERVAL_MS  = 3000;
+// Inference is light (~25-30 ms/frame) and requests are single-flighted, so we can
+// poll fast for low-latency feedback; a tick is skipped while one is still in flight.
+const CAPTURE_INTERVAL_MS  = 800;
 // Smoothing: keep a rolling buffer of the last N frames
-const EXPRESSION_BUFFER_SIZE = 5;
+const EXPRESSION_BUFFER_SIZE = 4;
 // Minimum frames in agreement before updating the displayed expression (2 = faster feedback)
 const MIN_AGREEMENT          = 2;
 // Minimum model confidence to accept a frame (valence detectors on 320×240 often peak ~0.15–0.55)
@@ -83,7 +84,7 @@ const useWebcam = (isActive = true) => {
       // POST frame to FastAPI /detect-emotion (abort if it takes too long)
       const token = localStorage.getItem('stemToken');
       const ctrl = new AbortController();
-      const kill = setTimeout(() => ctrl.abort(), 12000);
+      const kill = setTimeout(() => ctrl.abort(), 4000);
       const res = await fetch(EMOTION_DETECT_URL, {
         method:  'POST',
         headers: {
@@ -102,17 +103,21 @@ const useWebcam = (isActive = true) => {
         // Reject low-confidence frames — noisy predictions degrade behavioral signals
         if (confidence < MIN_CONFIDENCE) return;
 
-        // Rolling window majority vote: only surface an expression when ≥3/5 frames agree.
-        // This eliminates single-frame noise (lighting change, head turn, blink) from
-        // influencing the cognitive load calculation.
+        // Rolling window majority vote — eliminates single-frame noise (lighting
+        // change, head turn, blink). Non-neutral reads need a stronger majority
+        // than neutral so a stray "frustrated" frame can't flip the UI; when in
+        // doubt the expression stays neutral.
         const buf = expressionBuffer.current;
         buf.push(rawExpr);
         if (buf.length > EXPRESSION_BUFFER_SIZE) buf.shift();
 
         const counts = buf.reduce((acc, e) => { acc[e] = (acc[e] || 0) + 1; return acc; }, {});
         const [dominant, votes] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-        if (votes >= MIN_AGREEMENT) {
+        const needed = dominant === 'neutral' ? MIN_AGREEMENT : MIN_AGREEMENT + 1;
+        if (votes >= needed) {
           setCurrentExpression(dominant);
+        } else if (buf.filter(e => e === 'neutral').length >= MIN_AGREEMENT) {
+          setCurrentExpression('neutral');
         }
       } else {
         console.warn(`[useWebcam] /detect-emotion returned ${res.status}; keeping last expression`);
@@ -149,6 +154,7 @@ const useWebcam = (isActive = true) => {
 
     startWebcam().then(() => {
       if (cancelled) return;
+      captureAndDetect(); // first sample right away — don't wait a full interval
       intervalRef.current = setInterval(captureAndDetect, CAPTURE_INTERVAL_MS);
     });
 

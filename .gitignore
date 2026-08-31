@@ -6,3 +6,9 @@ __pycache__/
 data/
 *.faiss
 *.pkl
+*.pt
+
+# Adaptive Quiz component ships its model weights so it works out of the box.
+!backend/model/best.pt
+!backend/components/adaptive_quiz/models/learning_state_model.pkl
+!ml-service/models/learning_state_model.pkl

@@ -99,3 +99,52 @@ Binuri/
 | `OLLAMA_*` | Local chat when OpenAI key is empty. |
 
 After changing `EMBEDDING_PROVIDER` or embedding model, **delete `data/*` and re-run `python scripts/ingest.py`**.
+
+---
+
+## Adaptive Quiz component
+
+A behavior-aware, multi-level adaptive quiz: student auth, per-question timing, webcam
+expression signal, ML learning-state prediction, adaptive difficulty, gamified brain-break
+puzzles, a full report with a **personalised study plan + editable weekly timetable + badges**,
+a **Practice mode** (turn your own PDF into an ungraded quiz), and a **teacher dashboard**
+(class analytics + PDF→question generator).
+
+**Two processes:**
+1. **STEM_LearnLK app** (`python run.py`, `:8000`) — the API + the compiled React/Vite quiz UI
+   (`frontend/adaptive_quiz/`), served under `/adaptive-quiz`.
+2. **ML micro-service** (`ml-service/`, `:8001`) — RandomForest learning-state prediction and
+   the T5 PDF→MCQ generator. Optional: if it's down, prediction falls back to an in-process
+   model then a rule-based estimate; the PDF generator returns a clear error.
+
+**Setup**
+
+```powershell
+# main app deps
+pip install -r requirements.txt -r requirements-adaptive-quiz.txt
+# ml-service deps (torch, transformers, sklearn, pdfplumber — large)
+pip install -r ml-service\requirements.txt
+
+# .env: MONGO_URI, JWT_SECRET, TEACHER_KEY, ML_SERVICE_URL=http://127.0.0.1:8001
+python -m backend.components.adaptive_quiz.seed        # demo lesson + 9 questions
+
+cd frontend\adaptive_quiz && npm install && npm run build && cd ..\..
+
+# terminal 1 — ML service
+cd ml-service ; python -m uvicorn main:app --host 127.0.0.1 --port 8001
+# terminal 2 — main app
+python run.py
+```
+
+Open **http://127.0.0.1:8000/adaptive-quiz**. Re-run `npm run build` after editing
+`frontend/adaptive_quiz/src`. Teacher dashboard: `/adaptive-quiz/teacher` (enter `TEACHER_KEY`).
+
+- Model files ship in the repo: `backend/model/best.pt` (YOLO expression) and
+  `.../adaptive_quiz/models/learning_state_model.pkl` + `ml-service/models/...pkl` (RandomForest).
+- If `MONGO_URI` is unset the component stays dormant; the rest of the app is unaffected.
+- If the webcam / ML model / ML service is unavailable the quiz still completes.
+
+**API** (all `/api/adaptive-quiz/`): `auth/*`, `lessons`, `assessments/*`, `responses`,
+`responses/bulk`, `predict-learning-state`, `reports/*`, `study-plan/{lesson}` (GET/PUT/DEL),
+`questions/generate` (teacher), `questions/practice-generate` (student), `detect-emotion`,
+`status`.

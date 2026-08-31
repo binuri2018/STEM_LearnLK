@@ -2,7 +2,7 @@
   width: 90vw;
   max-width: 800px;
   height: 500px;
-  background: linear-gradient(to bottom, #020617, #1e1b4b);
+  background: linear-gradient(to bottom, #eef1f5, #eef2ff);
   border: 1px solid #6366f1;
   position: relative;
   overflow: hidden;
@@ -14,7 +14,7 @@
   background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
   position: relative;
   margin-top: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(15,23,42,0.06);
   border-radius: 12px;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .expression-indicator span {
-  color: #4ade80;
+  color: #16a34a;
 }
 
 @keyframes jitter {

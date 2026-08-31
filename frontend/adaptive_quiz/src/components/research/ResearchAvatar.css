@@ -14,7 +14,7 @@
 .avatar-floating-card {
   width: 100px;
   height: 100px;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.97));
   backdrop-filter: blur(16px);
   border-radius: 32px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -24,8 +24,8 @@
   position: relative;
   animation: float-avatar 5s ease-in-out infinite;
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    inset 0 0 20px rgba(255, 255, 255, 0.05);
+    0 20px 40px rgba(15,23,42,0.12),
+    inset 0 0 20px rgba(15,23,42,0.05);
 }
 
 .avatar-visual {
@@ -76,7 +76,7 @@
 
 /* Happy State */
 .happy .eye { 
-  background: #4ade80; 
+  background: #16a34a; 
   height: 6px;
   border-radius: 10px 10px 0 0;
   transform: translateY(2px);
@@ -86,7 +86,7 @@
   height: 10px; 
   width: 24px;
   border-radius: 0 0 12px 12px; 
-  background: #4ade80; 
+  background: #16a34a; 
 }
 .happy .avatar-status-glow { 
   background: radial-gradient(circle, rgba(74, 222, 128, 0.5) 0%, transparent 70%);
@@ -95,13 +95,13 @@
 
 /* Encouraged State */
 .encouraged .eye { 
-  background: #fbbf24; 
+  background: #d97706; 
   transform: scale(1.1);
   box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
 }
 .encouraged .avatar-mouth { 
   width: 18px; 
-  background: #fbbf24; 
+  background: #d97706; 
   border-radius: 20px;
 }
 .encouraged .avatar-status-glow { 
@@ -111,7 +111,7 @@
 
 /* Thinking State */
 .thinking .eye { 
-  background: #a78bfa; 
+  background: #7c3aed; 
   width: 12px;
   height: 4px;
   border-radius: 4px;
@@ -134,15 +134,15 @@
 
 /* ── Bubble Aesthetics ── */
 .avatar-speech-bubble {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(255,255,255,0.96);
   backdrop-filter: blur(12px);
   padding: 12px 20px;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(15,23,42,0.06);
   font-size: 13px;
   font-weight: 500;
-  color: #f1f5f9;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: #0f172a;
+  box-shadow: 0 10px 30px rgba(15,23,42,0.08);
   max-width: 180px;
   text-align: center;
   opacity: 0;
@@ -160,7 +160,7 @@
   transform: translateX(-50%);
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 8px solid rgba(15, 23, 42, 0.8);
+  border-bottom: 8px solid rgba(255,255,255,0.96);
 }
 
 /* ── Animations ── */

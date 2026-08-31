@@ -6,10 +6,10 @@
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  border: 1.5px solid #334155;
+  border: 1.5px solid #c2ccd9;
   border-radius: 12px;
-  background: rgba(30,41,59,0.6);
-  color: #cbd5e1;
+  background: rgba(15,23,42,0.04);
+  color: #374151;
   font-size: 15px;
   text-align: left;
   cursor: pointer;
@@ -19,23 +19,23 @@
 .option:hover:not(:disabled) {
   border-color: #6366f1;
   background: rgba(99,102,241,0.1);
-  color: #e2e8f0;
+  color: #111827;
   transform: translateX(4px);
 }
 .option.selected {
   border-color: #6366f1;
   background: rgba(99,102,241,0.18);
-  color: #a5b4fc;
+  color: #4f46e5;
 }
 .option.correct {
   border-color: #22c55e;
   background: rgba(34,197,94,0.12);
-  color: #86efac;
+  color: #16a34a;
 }
 .option.wrong {
   border-color: #ef4444;
   background: rgba(239,68,68,0.1);
-  color: #fca5a5;
+  color: #dc2626;
 }
 .option.faded { opacity: 0.4; }
 .option:disabled { cursor: default; }
@@ -51,7 +51,7 @@
   justify-content: center;
   font-size: 13px;
   font-weight: 700;
-  color: #818cf8;
+  color: #4f46e5;
   flex-shrink: 0;
 }
 .option.correct .option-letter { background: rgba(34,197,94,0.2); border-color: #22c55e; color: #22c55e; }

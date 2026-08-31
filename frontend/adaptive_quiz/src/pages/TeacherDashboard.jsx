@@ -77,13 +77,13 @@ const TeacherDashboard = () => {
     return (
       <div className="report-page" style={{ padding: '60px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <form onSubmit={handleKeySubmit} style={{
-          background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.08)', borderRadius: '16px',
+          background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(15,23,42,0.05)', borderRadius: '16px',
           padding: '40px 32px', maxWidth: '360px', width: '100%', textAlign: 'center',
         }}>
           <div style={{ fontSize: '40px', marginBottom: '12px' }}>🔑</div>
-          <h2 style={{ color: '#e2e8f0', fontSize: '20px', margin: '0 0 8px' }}>Teacher Access</h2>
-          <p style={{ color: '#64748b', fontSize: '13px', margin: '0 0 20px' }}>
+          <h2 style={{ color: '#111827', fontSize: '20px', margin: '0 0 8px' }}>Teacher Access</h2>
+          <p style={{ color: '#6b7280', fontSize: '13px', margin: '0 0 20px' }}>
             Enter the shared teacher key to view classroom research data.
           </p>
           <input
@@ -94,11 +94,11 @@ const TeacherDashboard = () => {
             placeholder="Teacher access key"
             style={{
               width: '100%', boxSizing: 'border-box', padding: '10px 14px', borderRadius: '8px',
-              border: '1px solid #334155', background: 'rgba(0,0,0,0.25)', color: '#e2e8f0',
+              border: '1px solid #c2ccd9', background: 'rgba(15,23,42,0.08)', color: '#111827',
               fontSize: '14px', marginBottom: '12px',
             }}
           />
-          {keyError && <p style={{ color: '#f87171', fontSize: '12px', margin: '0 0 12px' }}>{keyError}</p>}
+          {keyError && <p style={{ color: '#dc2626', fontSize: '12px', margin: '0 0 12px' }}>{keyError}</p>}
           <button type="submit" style={{
             width: '100%', padding: '10px', borderRadius: '8px', border: 'none',
             background: '#6366f1', color: '#fff', fontWeight: '700', fontSize: '14px', cursor: 'pointer',
@@ -108,7 +108,7 @@ const TeacherDashboard = () => {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            style={{ marginTop: '14px', background: 'transparent', border: 'none', color: '#475569', fontSize: '12px', cursor: 'pointer' }}
+            style={{ marginTop: '14px', background: 'transparent', border: 'none', color: '#9ca3af', fontSize: '12px', cursor: 'pointer' }}
           >
             ← Return to Main Login
           </button>
@@ -125,7 +125,7 @@ const TeacherDashboard = () => {
         <div className="report-header" style={{ marginBottom: '50px' }}>
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>🏫</div>
           <h1 className="report-title" style={{ fontSize: '36px', letterSpacing: '-0.5px' }}>Teacher Dashboard</h1>
-          <p className="report-meta" style={{ fontSize: '16px', color: '#64748b' }}>
+          <p className="report-meta" style={{ fontSize: '16px', color: '#6b7280' }}>
             Real-time Monitoring of Classroom-wide Behavioral Engagement & Performance
           </p>
         </div>
@@ -135,31 +135,31 @@ const TeacherDashboard = () => {
 
         {/* Dashboard Content */}
         <div className="report-section" style={{
-          background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.08)', padding: '32px'
+          background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(15,23,42,0.05)', padding: '32px'
         }}>
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'24px' }}>
             <div>
               <h3 className="section-title" style={{ color:'#6366f1', margin:0 }}>📊 Student Performance Overview</h3>
               {reports.length > 0 && (
-                <p style={{ margin:'4px 0 0', fontSize:'12px', color:'#475569' }}>
+                <p style={{ margin:'4px 0 0', fontSize:'12px', color:'#9ca3af' }}>
                   {Object.keys(reports.reduce((a,r)=>({...a,[r.studentId]:1}),{})).length} students · {reports.length} sessions total
                 </p>
               )}
             </div>
             {reports.length > 0 && (
               <button onClick={handleExport} style={{
-                background:'rgba(99,102,241,0.1)', border:'1px solid #6366f1', color:'#a5b4fc',
+                background:'rgba(99,102,241,0.1)', border:'1px solid #6366f1', color:'#4f46e5',
                 padding:'8px 16px', borderRadius:'8px', fontSize:'12px', fontWeight:'700', cursor:'pointer'
               }}>📥 Export Data (JSON)</button>
             )}
           </div>
 
           {reports.length === 0 ? (
-            <div style={{ textAlign:'center', padding:'60px 20px', color:'#94a3b8' }}>
+            <div style={{ textAlign:'center', padding:'60px 20px', color:'#4b5563' }}>
               <div style={{ fontSize:'40px', marginBottom:'16px', opacity:0.4 }}>📂</div>
               <p style={{ fontSize:'16px', fontWeight:'600', margin:0 }}>No Data Yet</p>
-              <p style={{ fontSize:'13px', marginTop:'8px', color:'#475569' }}>Student behavioral data will appear here once assessments are completed.</p>
+              <p style={{ fontSize:'13px', marginTop:'8px', color:'#9ca3af' }}>Student behavioral data will appear here once assessments are completed.</p>
             </div>
           ) : (
             <StudentCards reports={reports} getExpressionEmoji={getExpressionEmoji} />
@@ -176,7 +176,7 @@ const TeacherDashboard = () => {
 
       <style>{`
         .dashboard-row:hover {
-          background: rgba(255, 255, 255, 0.06) !important;
+          background: rgba(15,23,42,0.05) !important;
           transform: scale(1.01);
         }
       `}</style>
@@ -219,11 +219,11 @@ function StudentCards({ reports, getExpressionEmoji }) {
         const isOpen = expanded[g.studentId];
         return (
           <div key={g.studentId} style={{
-            background:'rgba(255,255,255,0.03)', border:`1px solid ${st.border}`,
+            background:'rgba(15,23,42,0.05)', border:`1px solid ${st.border}`,
             borderRadius:'16px', overflow:'hidden',
           }}>
             {/* Card header */}
-            <div style={{ padding:'18px 20px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ padding:'18px 20px', borderBottom:'1px solid rgba(15,23,42,0.05)' }}>
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'12px' }}>
                 <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
                   {/* Avatar */}
@@ -237,8 +237,8 @@ function StudentCards({ reports, getExpressionEmoji }) {
                     {g.studentId.slice(0,2).toUpperCase()}
                   </div>
                   <div>
-                    <div style={{ fontWeight:'800', color:'#e2e8f0', fontSize:'15px' }}>{g.studentId}</div>
-                    <div style={{ fontSize:'11px', color:'#475569' }}>
+                    <div style={{ fontWeight:'800', color:'#111827', fontSize:'15px' }}>{g.studentId}</div>
+                    <div style={{ fontSize:'11px', color:'#9ca3af' }}>
                       {g.sessions.length} session{g.sessions.length > 1 ? 's' : ''} · {g.sessions[0].lessonId}
                     </div>
                   </div>
@@ -253,19 +253,19 @@ function StudentCards({ reports, getExpressionEmoji }) {
               {/* Score row */}
               <div style={{ display:'flex', alignItems:'flex-end', gap:'16px', marginBottom:'12px' }}>
                 <div>
-                  <div style={{ fontSize:'11px', color:'#475569', marginBottom:'2px', textTransform:'uppercase', letterSpacing:'0.4px' }}>Latest</div>
+                  <div style={{ fontSize:'11px', color:'#9ca3af', marginBottom:'2px', textTransform:'uppercase', letterSpacing:'0.4px' }}>Latest</div>
                   <div style={{ fontSize:'32px', fontWeight:'800', color:st.color, lineHeight:1 }}>{g.latest}%</div>
                 </div>
                 <div>
-                  <div style={{ fontSize:'11px', color:'#475569', marginBottom:'2px', textTransform:'uppercase', letterSpacing:'0.4px' }}>Average</div>
-                  <div style={{ fontSize:'20px', fontWeight:'700', color:'#94a3b8', lineHeight:1 }}>{g.avg}%</div>
+                  <div style={{ fontSize:'11px', color:'#9ca3af', marginBottom:'2px', textTransform:'uppercase', letterSpacing:'0.4px' }}>Average</div>
+                  <div style={{ fontSize:'20px', fontWeight:'700', color:'#4b5563', lineHeight:1 }}>{g.avg}%</div>
                 </div>
                 {g.trend !== null && (
                   <div style={{ marginLeft:'auto', textAlign:'right' }}>
-                    <div style={{ fontSize:'11px', color:'#475569', marginBottom:'2px' }}>Trend</div>
+                    <div style={{ fontSize:'11px', color:'#9ca3af', marginBottom:'2px' }}>Trend</div>
                     <div style={{
                       fontSize:'15px', fontWeight:'800',
-                      color: g.trend > 0 ? '#22c55e' : g.trend < 0 ? '#ef4444' : '#94a3b8',
+                      color: g.trend > 0 ? '#22c55e' : g.trend < 0 ? '#ef4444' : '#4b5563',
                     }}>
                       {g.trend > 0 ? '▲' : g.trend < 0 ? '▼' : '→'} {Math.abs(g.trend)}%
                     </div>
@@ -293,22 +293,22 @@ function StudentCards({ reports, getExpressionEmoji }) {
               <div style={{ display:'flex', gap:'8px', flexWrap:'wrap' }}>
                 <span style={{
                   padding:'4px 10px', borderRadius:'8px', fontSize:'12px',
-                  background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', color:'#94a3b8',
+                  background:'rgba(15,23,42,0.05)', border:'1px solid rgba(15,23,42,0.05)', color:'#4b5563',
                 }}>
                   {getExpressionEmoji(g.emotion)} {g.emotion}
                 </span>
                 <span style={{
                   padding:'4px 10px', borderRadius:'8px', fontSize:'12px',
-                  background: g.avgHints > 4 ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.04)',
-                  border: g.avgHints > 4 ? '1px solid rgba(239,68,68,0.2)' : '1px solid rgba(255,255,255,0.08)',
-                  color: g.avgHints > 4 ? '#fca5a5' : '#94a3b8',
+                  background: g.avgHints > 4 ? 'rgba(239,68,68,0.1)' : 'rgba(15,23,42,0.05)',
+                  border: g.avgHints > 4 ? '1px solid rgba(239,68,68,0.2)' : '1px solid rgba(15,23,42,0.05)',
+                  color: g.avgHints > 4 ? '#dc2626' : '#4b5563',
                 }}>
                   💡 {g.avgHints} avg hints
                 </span>
                 {g.weakAreas.slice(0,2).map(w => (
                   <span key={w} style={{
                     padding:'4px 10px', borderRadius:'8px', fontSize:'11px',
-                    background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.15)', color:'#fca5a5',
+                    background:'rgba(239,68,68,0.08)', border:'1px solid rgba(239,68,68,0.15)', color:'#dc2626',
                   }}>⚠ {w}</span>
                 ))}
               </div>
@@ -319,7 +319,7 @@ function StudentCards({ reports, getExpressionEmoji }) {
               onClick={() => setExpanded(p => ({ ...p, [g.studentId]: !p[g.studentId] }))}
               style={{
                 width:'100%', padding:'10px 20px', background:'transparent',
-                border:'none', cursor:'pointer', color:'#475569', fontSize:'12px',
+                border:'none', cursor:'pointer', color:'#9ca3af', fontSize:'12px',
                 display:'flex', alignItems:'center', justifyContent:'space-between',
               }}
             >
@@ -333,19 +333,19 @@ function StudentCards({ reports, getExpressionEmoji }) {
                   <div key={s.sessionId} style={{
                     display:'flex', alignItems:'center', gap:'10px',
                     padding:'8px 12px', borderRadius:'8px',
-                    background: i === g.sessions.length-1 ? `${st.color}11` : 'rgba(255,255,255,0.02)',
-                    border: i === g.sessions.length-1 ? `1px solid ${st.border}` : '1px solid rgba(255,255,255,0.05)',
+                    background: i === g.sessions.length-1 ? `${st.color}11` : 'rgba(15,23,42,0.05)',
+                    border: i === g.sessions.length-1 ? `1px solid ${st.border}` : '1px solid rgba(15,23,42,0.05)',
                   }}>
-                    <span style={{ fontSize:'11px', color:'#475569', width:'20px' }}>#{i+1}</span>
+                    <span style={{ fontSize:'11px', color:'#9ca3af', width:'20px' }}>#{i+1}</span>
                     <span style={{
                       fontWeight:'700', fontSize:'14px',
                       color: s.totalScore >= 75 ? '#22c55e' : s.totalScore >= 50 ? '#f59e0b' : '#ef4444',
                       width:'46px',
                     }}>{Math.round(s.totalScore)}%</span>
-                    <span style={{ fontSize:'11px', color:'#475569', flex:1 }}>
+                    <span style={{ fontSize:'11px', color:'#9ca3af', flex:1 }}>
                       {s.createdAt ? new Date(s.createdAt).toLocaleDateString() : '—'}
                     </span>
-                    <span style={{ fontSize:'11px', color:'#475569' }}>💡 {s.hintUsageCount || 0}</span>
+                    <span style={{ fontSize:'11px', color:'#9ca3af' }}>💡 {s.hintUsageCount || 0}</span>
                     <span style={{ fontSize:'13px' }}>{getExpressionEmoji(s.mostCommonExpression)}</span>
                   </div>
                 ))}
