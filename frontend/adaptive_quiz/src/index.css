@@ -1,0 +1,39 @@
+/* index.css — Global base styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-bg:       #f5f7f9;
+  --color-surface:  #ffffff;
+  --color-border:   #e5e9ef;
+  --color-primary:  #6366f1;
+  --color-success:  #16a34a;
+  --color-warning:  #d97706;
+  --color-danger:   #dc2626;
+  --color-text:     #111827;
+  --color-muted:    #6b7280;
+  --font-sans: 'Inter', 'Noto Sans Sinhala', system-ui, -apple-system, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-surface); }
+::-webkit-scrollbar-thumb { background: #c2ccd9; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 { line-height: 1.3; font-weight: 700; }
+
+/* Utility */
+.text-muted { color: var(--color-muted); }

@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+python-multipart
+scikit-learn
+pandas
+numpy
+joblib
+pydantic
+# Question generation (T5 model + PDF extraction)
+transformers
+torch
+pdfplumber
+sentencepiece
+protobuf
+# Real emotion detection — ViT model via transformers (PyTorch, no TensorFlow needed)
+opencv-python

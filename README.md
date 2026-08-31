@@ -102,56 +102,49 @@ After changing `EMBEDDING_PROVIDER` or embedding model, **delete `data/*` and re
 
 ---
 
-## Narrative Learning
+## Adaptive Quiz component
 
-Open **http://127.0.0.1:8000/narrative-learning**. This module uses its own NIE textbook index (Chroma + `nomic-embed-text`) and a persona classifier — it does not share the Voice Tutor FAISS store.
+A behavior-aware, multi-level adaptive quiz: student auth, per-question timing, webcam
+expression signal, ML learning-state prediction, adaptive difficulty, gamified brain-break
+puzzles, a full report with a **personalised study plan + editable weekly timetable + badges**,
+a **Practice mode** (turn your own PDF into an ungraded quiz), and a **teacher dashboard**
+(class analytics + PDF→question generator).
 
-Set `LLM_PROVIDER`, `GROQ_API_KEY` or local Ollama, and `OLLAMA_EMBED_MODEL=nomic-embed-text` in `.env`. Point `NARRATIVE_VECTOR_DB` at a built `science_vector_db` folder if it is not next to the component.
+**Two processes:**
+1. **STEM_LearnLK app** (`python run.py`, `:8000`) — the API + the compiled React/Vite quiz UI
+   (`frontend/adaptive_quiz/`), served under `/adaptive-quiz`.
+2. **ML micro-service** (`ml-service/`, `:8001`) — RandomForest learning-state prediction and
+   the T5 PDF→MCQ generator. Optional: if it's down, prediction falls back to an in-process
+   model then a rule-based estimate; the PDF generator returns a clear error.
 
-Retrain the persona classifier (real Google Form + synthetic rows):
+**Setup**
 
 ```powershell
-pip install openpyxl scikit-learn pandas
-python scripts\train_persona.py --survey path\to\form.xlsx --preview
-python scripts\train_persona.py --survey path\to\form.xlsx
+# main app deps
+pip install -r requirements.txt -r requirements-adaptive-quiz.txt
+# ml-service deps (torch, transformers, sklearn, pdfplumber — large)
+pip install -r ml-service\requirements.txt
+
+# .env: MONGO_URI, JWT_SECRET, TEACHER_KEY, ML_SERVICE_URL=http://127.0.0.1:8001
+python -m backend.components.adaptive_quiz.seed        # demo lesson + 9 questions
+
+cd frontend\adaptive_quiz && npm install && npm run build && cd ..\..
+
+# terminal 1 — ML service
+cd ml-service ; python -m uvicorn main:app --host 127.0.0.1 --port 8001
+# terminal 2 — main app
+python run.py
 ```
 
-Then set `USE_TRAINED_CLASSIFIER=1` in `.env` and restart the server. Real survey rows are weighted 3× so ~30 answers are not drowned by the synthetic CSV.
+Open **http://127.0.0.1:8000/adaptive-quiz**. Re-run `npm run build` after editing
+`frontend/adaptive_quiz/src`. Teacher dashboard: `/adaptive-quiz/teacher` (enter `TEACHER_KEY`).
 
----
+- Model files ship in the repo: `backend/model/best.pt` (YOLO expression) and
+  `.../adaptive_quiz/models/learning_state_model.pkl` + `ml-service/models/...pkl` (RandomForest).
+- If `MONGO_URI` is unset the component stays dormant; the rest of the app is unaffected.
+- If the webcam / ML model / ML service is unavailable the quiz still completes.
 
-## What GitHub has vs what you copy by hand
-
-Do **not** put these on GitHub (too large, copyrighted, or private):
-
-| Thing | Why it's off git | On another PC |
-|---|---|---|
-| `science_vector_db/` | Chroma RAG index (textbook embeddings) | Copy the folder, **or** rebuild (below) |
-| NIE science PDFs | Copyrighted textbooks | Keep on USB / Drive, not in the repo |
-| `.env` | API keys | Copy `.env.example` → `.env` and fill in |
-| Ollama weights (`nomic-embed-text`, `llama3.1`) | Multi-GB local models | `ollama pull nomic-embed-text` on that PC |
-| Student survey `.xlsx` | Real student answers | Keep private |
-
-GitHub **does** include the small persona files (`persona_model.pkl`, `encoder.pkl`, ~0.7 MB) so the story-theme classifier works after clone. It does **not** include the RAG store.
-
-### RAG database on a teammate's PC (pick one)
-
-**A. Copy the built index (fastest, no re-embed)**  
-Copy the whole `science_vector_db` folder (from this PC it lives at `C:\STEM TEXT\science_vector_db`, and LearnLK points at it with a folder junction). Place it at:
-
-`STEM_LearnLK/backend/components/narrative_learning/science_vector_db`
-
-Or set in `.env`:
-
-`NARRATIVE_VECTOR_DB=C:\path\to\science_vector_db`
-
-That PC must still run Ollama with **`nomic-embed-text`** (same embedding model used to build the index). Queries will fail if the embed model differs.
-
-**B. Rebuild from PDFs** (only if you have the Grade 10–11 science books)
-
-1. Install Ollama and run `ollama pull nomic-embed-text`
-2. Point `ingest.py` in the STEM TEXT project at those PDFs and rebuild `science_vector_db`
-3. Copy or junction that folder as in A
-
-You do **not** need to copy `llama3.1` if `.env` uses a hosted writer (`LLM_PROVIDER=groq`). You **do** need `nomic-embed-text` for retrieval.
-
+**API** (all `/api/adaptive-quiz/`): `auth/*`, `lessons`, `assessments/*`, `responses`,
+`responses/bulk`, `predict-learning-state`, `reports/*`, `study-plan/{lesson}` (GET/PUT/DEL),
+`questions/generate` (teacher), `questions/practice-generate` (student), `detect-emotion`,
+`status`.
