@@ -1,0 +1,88 @@
+.gamification-container {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 600px) {
+  .gamification-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .recharge-btn {
+    width: 100%;
+  }
+}
+
+.recharge-btn {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.recharge-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+  filter: brightness(1.1);
+}
+
+.recharge-btn:active {
+  transform: translateY(0);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+}
+
+.stat-value {
+  color: #f8fafc;
+}
+
+.stat-bar-bg {
+  height: 8px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-bar-fill {
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hp-fill {
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+.xp-fill {
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
