@@ -37,7 +37,9 @@ def format_context_for_llm(hits: list[dict]) -> str:
     blocks: list[str] = []
     for i, h in enumerate(hits, start=1):
         header = _source_line(h)
-        blocks.append(f"[Context {i}] {header}\n{h.get('text', '').strip()}")
+        evidence_id = h.get("evidence_id")
+        label = f"Evidence {evidence_id}" if evidence_id else f"Context {i}"
+        blocks.append(f"[{label}] {header}\n{h.get('text', '').strip()}")
     return "\n\n".join(blocks)
 
 
