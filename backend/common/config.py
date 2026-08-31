@@ -90,6 +90,30 @@ class Settings(BaseSettings):
     m4_verify_max_workers: int = 5
     m4_web_search_timeout_seconds: float = 8.0
 
+    # ── Adaptive Quiz component ──────────────────────────────────────────────
+    # MongoDB connection string (Beanie/Motor). When unset the quiz component
+    # stays dormant and the rest of the app is unaffected.
+    mongo_uri: str | None = None
+    jwt_secret: str = "change-me-in-production"
+    jwt_expire_days: int = 7
+    # Shared secret gating the teacher-dashboard cross-student endpoints (no teacher accounts).
+    teacher_key: str = ""
+    # ML micro-service (learning-state prediction + T5 PDF question generation).
+    ml_service_url: str = "http://127.0.0.1:8001"
+    # Webcam expression model (Ultralytics YOLO checkpoint).
+    emotion_model_path: Path = Path("backend/model/best.pt")
+    # Learning-state RandomForest classifier (joblib).
+    quiz_model_path: Path = Path("backend/components/adaptive_quiz/models/learning_state_model.pkl")
+    emotion_predict_imgsz: int = 256
+    emotion_yolo_conf: float = 0.12
+    # Any winning class below this confidence -> report "neutral" (unsure, don't guess).
+    emotion_min_conf: float = 0.45
+    # A "negative"/frustrated read needs to be this confident before we surface it —
+    # the valence model leans negative on noisy / poorly-lit frames.
+    emotion_negative_min_conf: float = 0.60
+    # Optional JSON object: raw class name -> expression label.
+    emotion_label_map: str = ""
+
     def resolved_resource_dir(self) -> Path:
         p = self.resource_dir
         return p if p.is_absolute() else (self.project_root / p)
@@ -100,6 +124,14 @@ class Settings(BaseSettings):
 
     def resolved_frontend_dir(self) -> Path:
         p = self.frontend_dir
+        return p if p.is_absolute() else (self.project_root / p)
+
+    def resolved_emotion_model_path(self) -> Path:
+        p = self.emotion_model_path
+        return p if p.is_absolute() else (self.project_root / p)
+
+    def resolved_quiz_model_path(self) -> Path:
+        p = self.quiz_model_path
         return p if p.is_absolute() else (self.project_root / p)
 
 

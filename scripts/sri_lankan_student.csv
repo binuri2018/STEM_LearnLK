@@ -1,0 +1,74 @@
+Student_ID,Grade,Interest,Aspiration,Struggle_Level,Story_Theme
+SL-10-001,10,Mathematics,Pilot,Low,Logic & Mystery
+SL-10-002,10,Graphic Design,Architect,Low,Creative Expression
+SL-10-003,10,Photography,Graphic Designer,Medium,Creative Expression
+SL-10-004,10,Coding/ICT,Graphic Designer,High,Sci-Fi & Innovation
+SL-10-005,10,Graphic Design,Architect,Low,Creative Expression
+SL-10-006,10,Biology,Architect,High,Nature & Discovery
+SL-10-007,10,Kandyan Dancing,Civil Engineer,Medium,Creative Expression
+SL-10-008,10,Astronomy,Other,Medium,Sci-Fi & Innovation
+SL-10-009,10,Kandyan Dancing,Doctor,Low,Creative Expression
+SL-10-010,10,Cricket,Other,Medium,Action & Competition
+SL-10-011,10,Kandyan Dancing,Other,Low,Creative Expression
+SL-10-012,10,Cricket,Artist,High,Action & Competition
+SL-10-013,10,Environmental Science,Other,High,Nature & Discovery
+SL-10-014,10,Music,Entrepreneur,High,Creative Expression
+SL-10-015,10,Biology,Scientist,High,Nature & Discovery
+SL-10-016,10,Photography,Entrepreneur,High,Creative Expression
+SL-10-017,10,Photography,Scientist,High,Creative Expression
+SL-10-018,10,Mobile Gaming (PUBG/FreeFire),Pilot,Low,Action & Competition
+SL-10-019,10,Volleyball,Doctor,Medium,Action & Competition
+SL-10-020,10,Robotics,Teacher,Low,Sci-Fi & Innovation
+SL-10-021,10,Mobile Gaming (PUBG/FreeFire),Pilot,High,Action & Competition
+SL-10-022,10,Volleyball,Graphic Designer,Low,Action & Competition
+SL-10-023,10,Astronomy,Entrepreneur,Medium,Sci-Fi & Innovation
+SL-10-024,10,Cricket,Pilot,Medium,Action & Competition
+SL-10-025,10,Astronomy,Pilot,Medium,Sci-Fi & Innovation
+SL-10-026,10,Music,Data Scientist,Medium,Creative Expression
+SL-10-027,10,Environmental Science,Pilot,Medium,Nature & Discovery
+SL-10-028,10,Art,Doctor,Medium,Creative Expression
+SL-10-029,10,Volleyball,Doctor,Medium,Action & Competition
+SL-10-030,10,Music,Pilot,Medium,Creative Expression
+SL-10-031,10,Astronomy,Graphic Designer,Low,Sci-Fi & Innovation
+SL-10-032,10,Music,Architect,Low,Creative Expression
+SL-10-033,10,Art,Doctor,High,Creative Expression
+SL-11-001,11,Photography,Architect,Medium,Creative Expression
+SL-11-002,11,Robotics,Other,Low,Sci-Fi & Innovation
+SL-11-003,11,Robotics,Software Engineer,Low,Sci-Fi & Innovation
+SL-11-004,11,Mathematics,Scientist,Low,Logic & Mystery
+SL-11-005,11,Volleyball,Architect,High,Action & Competition
+SL-11-006,11,Graphic Design,Entrepreneur,Low,Creative Expression
+SL-11-007,11,Astronomy,Entrepreneur,High,Sci-Fi & Innovation
+SL-11-008,11,Cricket,Artist,Low,Action & Competition
+SL-11-009,11,Environmental Science,Graphic Designer,Medium,Nature & Discovery
+SL-11-010,11,Robotics,Other,High,Sci-Fi & Innovation
+SL-11-011,11,Robotics,Architect,Medium,Sci-Fi & Innovation
+SL-11-012,11,Cricket,Graphic Designer,High,Action & Competition
+SL-11-013,11,Music,Architect,Low,Creative Expression
+SL-11-014,11,Coding/ICT,Other,Medium,Sci-Fi & Innovation
+SL-11-015,11,Graphic Design,Entrepreneur,Low,Creative Expression
+SL-11-016,11,Coding/ICT,Civil Engineer,High,Sci-Fi & Innovation
+SL-11-017,11,Music,Entrepreneur,Low,Creative Expression
+SL-11-018,11,Photography,Teacher,High,Creative Expression
+SL-11-019,11,Music,Graphic Designer,High,Creative Expression
+SL-11-020,11,Robotics,Teacher,Medium,Sci-Fi & Innovation
+SL-11-021,11,Volleyball,Entrepreneur,High,Action & Competition
+SL-11-022,11,Mathematics,Software Engineer,Low,Logic & Mystery
+SL-11-023,11,Biology,Civil Engineer,High,Nature & Discovery
+SL-11-024,11,Mathematics,Artist,Low,Logic & Mystery
+SL-11-025,11,Biology,Graphic Designer,High,Nature & Discovery
+SL-11-026,11,Coding/ICT,Data Scientist,Medium,Sci-Fi & Innovation
+SL-11-027,11,Environmental Science,Scientist,Low,Nature & Discovery
+SL-11-028,11,Kandyan Dancing,Other,Medium,Creative Expression
+SL-11-029,11,Music,Artist,Medium,Creative Expression
+SL-11-030,11,Mathematics,Other,Low,Logic & Mystery
+SL-11-031,11,Mathematics,Software Engineer,Low,Logic & Mystery
+SL-11-032,11,Robotics,Artist,Medium,Sci-Fi & Innovation
+SL-11-033,11,Robotics,Pilot,Low,Sci-Fi & Innovation
+SL-11-034,11,Robotics,Entrepreneur,High,Sci-Fi & Innovation
+SL-11-035,11,Kandyan Dancing,Architect,High,Creative Expression
+SL-11-036,11,Robotics,Civil Engineer,Low,Sci-Fi & Innovation
+SL-11-037,11,Coding/ICT,Teacher,High,Sci-Fi & Innovation
+SL-11-038,11,Graphic Design,Data Scientist,Low,Creative Expression
+SL-11-039,11,Biology,Software Engineer,Medium,Nature & Discovery
+SL-11-040,11,Cricket,Teacher,Medium,Action & Competition

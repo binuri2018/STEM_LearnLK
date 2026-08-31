@@ -1,11 +1,13 @@
 """FastAPI app: AI STEM Ecosystem API under /api, frontend UI under /."""
 from __future__ import annotations
 
+import asyncio
 from contextlib import asynccontextmanager
 import logging
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from backend.common.config import settings
@@ -64,7 +66,33 @@ async def lifespan(_: FastAPI):
                 warm_local_embedding_model()
             except EmbeddingLoadError as exc:
                 logger.warning("Local embeddings not ready: %s", exc)
+
+    # Adaptive Quiz component — isolated so a missing MONGO_URI or offline DB
+    # never blocks the rest of the app.
+    try:
+        from backend.components.adaptive_quiz.db import init_quiz_db
+
+        await init_quiz_db()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Adaptive Quiz DB not initialised: %s", exc)
+    else:
+        async def _warm_emotion_model() -> None:
+            try:
+                from backend.components.adaptive_quiz.emotion import get_model
+
+                await asyncio.to_thread(get_model)
+            except Exception:  # noqa: BLE001
+                logger.exception("Adaptive Quiz emotion model warmup failed")
+
+        asyncio.create_task(_warm_emotion_model())
+
     yield
+    try:
+        from backend.components.adaptive_quiz.db import close_quiz_db
+
+        await close_quiz_db()
+    except Exception:  # noqa: BLE001
+        pass
     _store = None
     configure_embeddings(None)
 
@@ -83,6 +111,20 @@ async def revalidate_frontend_assets(request: Request, call_next):
     if path == "/" or path.startswith("/static/"):
         response.headers["Cache-Control"] = "no-cache, must-revalidate"
     return response
+
+
+@app.exception_handler(RequestValidationError)
+async def _validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Adaptive-quiz routes want validation failures in the {success, message} shape its
+    ported frontend reads. Other components keep FastAPI's default 422 payload."""
+    if not request.url.path.startswith("/api/adaptive-quiz"):
+        return JSONResponse(status_code=422, content={"detail": exc.errors()})
+    errors = exc.errors()
+    msg = "Invalid request data"
+    if errors:
+        raw = errors[0].get("msg", msg)
+        msg = raw.split("Value error, ", 1)[-1] if "Value error, " in raw else raw
+    return JSONResponse(status_code=400, content={"success": False, "message": msg})
 
 
 @app.get("/api/health")
@@ -145,10 +187,31 @@ def serve_narrative() -> FileResponse:
     return _serve_frontend_page("narrative_learning")
 
 
+_quiz_dist = _frontend_dir / "adaptive_quiz" / "dist"
+
+
 @app.get("/adaptive-quiz", include_in_schema=False)
-@app.get("/adaptive-quiz/", include_in_schema=False)
-def serve_quiz() -> FileResponse:
-    return _serve_frontend_page("adaptive_quiz")
+@app.get("/adaptive-quiz/{resource_path:path}", include_in_schema=False)
+def serve_quiz(resource_path: str = "") -> FileResponse:
+    """Serve the built Vite/React SPA (frontend/adaptive_quiz/dist).
+
+    Real build artifacts (``/adaptive-quiz/assets/...``) are returned directly;
+    every other path falls back to ``index.html`` for client-side routing.
+    """
+    if resource_path:
+        candidate = (_quiz_dist / resource_path).resolve()
+        if _quiz_dist in candidate.parents and candidate.is_file():
+            return FileResponse(candidate)
+    index = _quiz_dist / "index.html"
+    if index.is_file():
+        return FileResponse(index)
+    raise HTTPException(
+        status_code=503,
+        detail=(
+            "Adaptive Quiz frontend is not built. Run: "
+            "cd frontend/adaptive_quiz && npm install && npm run build"
+        ),
+    )
 
 
 @app.get("/knowledge-maps", include_in_schema=False)

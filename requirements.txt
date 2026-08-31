@@ -27,3 +27,14 @@ google-api-python-client>=2.100.0
 
 # Knowledge Maps (Member 4) — web search fallback for claim verification
 duckduckgo-search>=6.0.0
+
+# Narrative Learning (persona + Chroma RAG + Groq/Ollama writer)
+pandas
+openpyxl
+scikit-learn
+langchain-chroma
+langchain-ollama
+langchain-groq
+langchain-openai
+langchain-core
+chromadb>=1.3.5,<2

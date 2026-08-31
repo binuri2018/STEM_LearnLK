@@ -1,0 +1,189 @@
+/* AssessmentPage.css */
+.assessment-page {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgba(99,102,241,0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 100% 100%, rgba(168,85,247,0.06) 0%, transparent 50%),
+              #f5f7f9;
+  padding: 24px;
+  position: relative;
+}
+
+.webcam-corner {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+.assessment-container {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.assessment-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #4b5563;
+  background: #f5f7f9;
+}
+
+.assessment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.assessment-meta { display: flex; align-items: center; gap: 10px; }
+
+.lesson-chip {
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(15,23,42,0.05);
+  border: 1px solid rgba(15,23,42,0.05);
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.level-chip {
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: #4f46e5;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Question card */
+.question-card {
+  background: rgba(255,255,255,0.97);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 16px 48px rgba(15,23,42,0.12);
+  animation: questionIn 0.35s ease both;
+}
+@keyframes questionIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.question-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.question-num {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.concept-tag {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(99,102,241,0.1);
+  border: 1px solid rgba(99,102,241,0.2);
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.state-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.answer-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+.answer-stats strong { color: #4b5563; }
+
+.question-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.question-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-submit {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99,102,241,0.4); }
+.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-next {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,185,129,0.35); }
+
+.spin-ring {
+  width: 36px; height: 36px;
+  border: 3px solid rgba(99,102,241,0.2);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.spinner-sm {
+  width: 15px; height: 15px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
