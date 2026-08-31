@@ -25,6 +25,7 @@ if str(ROOT) not in sys.path:
 from backend.common.chunking import Chunk, chunk_pages
 from backend.common.config import settings
 from backend.common.embeddings import embed_texts_for_ingest
+from backend.common.image_extract import extract_and_index_images
 from backend.common.index_manifest import save_manifest
 from backend.common.metadata_infer import infer_from_path
 from backend.common.pdf_extract import extract_pages
@@ -75,7 +76,7 @@ def ingest() -> None:
     model_label = (
         settings.openai_embedding_model if prov == "openai" else settings.embedding_model
     )
-    print(f"Embedding {len(texts)} chunks via {prov} ({model_label}) …")
+    print(f"Embedding {len(texts)} chunks via {prov} ({model_label}) ...")
     vectors = embed_texts_for_ingest(texts)
 
     dim = vectors.shape[1]
@@ -89,6 +90,10 @@ def ingest() -> None:
         dim=dim,
     )
     print(f"Saved FAISS index, metadata, and index_manifest.json to {data_dir}")
+
+    # Extract and index textbook images (runs after text indexing)
+    print("\nExtracting textbook images ...")
+    extract_and_index_images(pdfs, resource, data_dir)
 
 
 if __name__ == "__main__":

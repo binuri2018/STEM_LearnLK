@@ -11,6 +11,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/common/css/global.css" />
+    <link rel="stylesheet" href="/static/narrative_learning/narrative.css?v=2" />
   </head>
   <body>
     <div class="shell">
@@ -58,7 +59,8 @@
         </div>
       </aside>
 
-      <main class="content-area">
+      <main class="content-area narrative-stage">
+        <canvas id="fx-canvas" class="fx-canvas" aria-hidden="true"></canvas>
         <section class="page-section">
           <div class="page-header">
             <a href="/" class="back-btn">
@@ -69,19 +71,92 @@
               <div class="module-icon-sm narrative-icon"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.396 0 2.7.405 3.8 1.104A7.968 7.968 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.969 7.969 0 0014.5 4c-1.396 0-2.7.405-3.8 1.104A7.968 7.968 0 0110 4.804z"/></svg></div>
               <h2 class="page-title">Narrative Learning</h2>
             </div>
+            <div id="health-pill" class="health-pill">Checking...</div>
           </div>
-          <div class="coming-soon-wrap">
-            <div class="coming-soon-card">
-              <div class="coming-soon-icon narrative-icon">
-                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.396 0 2.7.405 3.8 1.104A7.968 7.968 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.969 7.969 0 0014.5 4c-1.396 0-2.7.405-3.8 1.104A7.968 7.968 0 0110 4.804z"/></svg>
+
+          <div class="workspace phase-survey" id="workspace">
+            <div class="panel glass-card" id="step-survey">
+              <div class="q-dots" id="q-dots" aria-hidden="true"></div>
+              <p class="q-count" id="q-count"></p>
+              <h3 class="step-title" id="q-prompt">Loading…</h3>
+              <div class="choice-list" id="q-options"></div>
+              <div class="q-nav">
+                <button id="btn-q-back" class="btn ghost" type="button">Back</button>
+                <button id="btn-q-next" class="btn primary" type="button">Next</button>
               </div>
-              <h3>Narrative Learning</h3>
-              <p>Story-led learning paths are coming soon. This module will guide you through syllabus topics using rich narrative context and visual imagery.</p>
-              <div class="coming-badge">Coming Soon</div>
+              <div id="error-box" class="error-box hidden"></div>
+            </div>
+
+            <div class="panel glass-card hidden" id="step-theme">
+              <p class="field-label">Your story style</p>
+              <h3 class="theme-name" id="theme-name"></h3>
+              <p class="step-cap" id="theme-blurb"></p>
+              <p class="step-title" style="margin-top:1.2rem">Does this feel like you?</p>
+              <p class="step-cap">Tell us if the style matches — it helps the next version of the classifier.</p>
+              <div class="q-nav">
+                <button id="btn-theme-yes" class="btn primary" type="button">Yes, this is me</button>
+                <button id="btn-theme-no" class="btn ghost" type="button">Not really</button>
+              </div>
+            </div>
+
+            <div class="panel glass-card hidden" id="step-topic">
+              <h3 class="step-title">Pick a chapter</h3>
+              <p class="step-cap" id="theme-summary"></p>
+              <button id="btn-back-survey" class="btn ghost" type="button">Change answers</button>
+
+              <div class="form-row" style="margin-top:1rem">
+                <div>
+                  <label class="field-label" for="book">Textbook</label>
+                  <select id="book" class="select"></select>
+                </div>
+                <div>
+                  <label class="field-label" for="topic">Chapter / topic</label>
+                  <select id="topic" class="select"></select>
+                </div>
+              </div>
+
+              <label class="field-label" for="diagnostic">What do you want to focus on?</label>
+              <textarea id="diagnostic" class="textarea">Explain the core concept in simple terms.</textarea>
+
+              <button id="btn-generate" class="btn primary" type="button">Generate personalized story</button>
+              <div id="error-box-topic" class="error-box hidden"></div>
+            </div>
+
+            <div id="results" class="results-col hidden">
+              <div class="panel glass-card">
+                <div class="story-head">
+                  <h3 class="step-title" style="margin:0">Understand the science first</h3>
+                  <span id="theme-pill" class="health-pill"></span>
+                </div>
+                <p class="step-cap">Read this before the story.</p>
+                <div id="tell-block"></div>
+              </div>
+              <div class="panel glass-card">
+                <h3 class="step-title">See it in action</h3>
+                <p class="step-cap">Spot the science concept playing out in the scene.</p>
+                <div id="story-box" class="story-box"></div>
+                <div class="actions">
+                  <a id="quiz-link" class="btn primary" href="/adaptive-quiz">Go to Adaptive Quiz</a>
+                  <a class="btn ghost" href="/narrative-learning">New topic</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel glass-card hidden" id="study-panel">
+              <h3 class="step-title">Study sheet</h3>
+              <p class="step-cap">Filled after a story is generated.</p>
+              <div id="study-block"><p class="step-cap">Equations, definitions, and exam points will show here.</p></div>
+              <p class="field-label">Textbook passages used</p>
+              <div id="sources-block"><p class="step-cap">RAG sources appear after generation.</p></div>
             </div>
           </div>
         </section>
       </main>
     </div>
+    <script type="importmap">
+      { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js" } }
+    </script>
+    <script type="module" src="/static/narrative_learning/scene.js"></script>
+    <script src="/static/narrative_learning/narrative.js?v=2"></script>
   </body>
 </html>

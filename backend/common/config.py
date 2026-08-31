@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     faiss_index_name: str = "science_index.faiss"
     metadata_name: str = "science_metadata.jsonl"
     index_manifest_name: str = "index_manifest.json"
+    image_faiss_index_name: str = "image_index.faiss"
+    image_metadata_name: str = "image_metadata.jsonl"
 
     # ── Adaptive Quiz component ──────────────────────────────────────────────
     # MongoDB connection string (Beanie/Motor). When unset the quiz component

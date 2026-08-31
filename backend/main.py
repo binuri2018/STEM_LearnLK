@@ -212,3 +212,12 @@ if _frontend_dir.is_dir():
         StaticFiles(directory=str(_frontend_dir)),
         name="frontend-static",
     )
+
+# Serve extracted textbook images from data/extracted_images/ at /images
+_images_dir = settings.resolved_data_dir() / "extracted_images"
+if _images_dir.is_dir():
+    app.mount(
+        "/images",
+        StaticFiles(directory=str(_images_dir)),
+        name="textbook-images",
+    )

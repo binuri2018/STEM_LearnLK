@@ -66,6 +66,112 @@ function escapeHtml(s) {
   return d.innerHTML;
 }
 
+function renderImages(items) {
+  const el = $("textbook-images");
+  if (!el) return;
+  el.innerHTML = "";
+  if (!items || !items.length) {
+    el.hidden = true;
+    return;
+  }
+  const heading = document.createElement("h2");
+  heading.className = "section-title sources-title";
+  heading.textContent = "Textbook Figures";
+  el.appendChild(heading);
+
+  const grid = document.createElement("div");
+  grid.className = "figures-grid";
+  for (const img of items) {
+    const card = document.createElement("figure");
+    card.className = "figure-card";
+
+    const imgEl = document.createElement("img");
+    imgEl.className = "figure-img";
+    imgEl.src = img.url;
+    imgEl.alt = img.caption || `Textbook figure — p.${img.page}`;
+    imgEl.loading = "lazy";
+    imgEl.onerror = () => { card.hidden = true; };
+
+    const caption = document.createElement("figcaption");
+    caption.className = "figure-caption";
+    const capText = img.caption || "";
+    const meta = `${img.source ? escapeHtml(img.source.replace(/\.pdf$/i, "")) : ""}  ·  p. ${img.page}`;
+    caption.innerHTML = capText
+      ? `<span class="cap-text">${escapeHtml(capText)}</span><span class="cap-meta">${escapeHtml(meta)}</span>`
+      : `<span class="cap-meta">${escapeHtml(meta)}</span>`;
+
+    card.appendChild(imgEl);
+    card.appendChild(caption);
+    grid.appendChild(card);
+  }
+  el.appendChild(grid);
+  el.hidden = false;
+}
+
+function renderVisualExplanation(visual) {
+  const el = $("visual-explanation");
+  if (!el) return;
+  el.innerHTML = "";
+  if (!visual || !visual.image_url) {
+    el.hidden = true;
+    return;
+  }
+
+  const heading = document.createElement("h2");
+  heading.className = "section-title sources-title";
+  heading.textContent = "Visual Explanation (Internet)";
+  el.appendChild(heading);
+
+  const card = document.createElement("div");
+  card.className = "visual-card";
+
+  const imgWrapper = document.createElement("div");
+  imgWrapper.className = "visual-img-wrap";
+
+  const img = document.createElement("img");
+  img.className = "visual-img";
+  img.src = visual.image_url;
+  img.alt = visual.title || "Visual explanation diagram";
+  img.loading = "lazy";
+  img.onerror = () => { el.hidden = true; };
+
+  img.addEventListener("click", () => {
+    window.open(visual.image_url, "_blank");
+  });
+
+  imgWrapper.appendChild(img);
+
+  const metaBox = document.createElement("div");
+  metaBox.className = "visual-meta-box";
+
+  const titleEl = document.createElement("div");
+  titleEl.className = "visual-title";
+  titleEl.textContent = visual.title || "Educational Diagram";
+
+  const confidenceScore = visual.relevance_score ? `${Math.round(visual.relevance_score * 100)}% relevant` : "Verified";
+  const badge = document.createElement("span");
+  badge.className = "visual-badge";
+  badge.textContent = confidenceScore;
+  titleEl.appendChild(badge);
+
+  const attrEl = document.createElement("div");
+  attrEl.className = "visual-attr";
+  const sourceName = escapeHtml(visual.source_name || "Online Resource");
+  if (visual.source_url) {
+    attrEl.innerHTML = `Source: <a href="${escapeHtml(visual.source_url)}" target="_blank" rel="noopener noreferrer">${sourceName}</a>`;
+  } else {
+    attrEl.textContent = `Source: ${sourceName}`;
+  }
+
+  metaBox.appendChild(titleEl);
+  metaBox.appendChild(attrEl);
+
+  card.appendChild(imgWrapper);
+  card.appendChild(metaBox);
+  el.appendChild(card);
+  el.hidden = false;
+}
+
 async function ask() {
   const q = $("question").value.trim();
   const lang = $("lang").value;
@@ -93,6 +199,8 @@ async function ask() {
     const data = await r.json();
     answerEl.textContent = data.answer || "";
     renderSources(data.sources || []);
+    renderImages(data.images || []);
+    renderVisualExplanation(data.visual || null);
     $("btn-tts").disabled = !data.answer;
     window.__lastAnswer = data.answer;
     window.__ttsLang = lang;
@@ -100,6 +208,8 @@ async function ask() {
     answerEl.textContent = `Error: ${e.message}`;
     answerEl.classList.add("muted");
     renderSources([]);
+    renderImages([]);
+    renderVisualExplanation(null);
   } finally {
     btn.disabled = false;
   }
