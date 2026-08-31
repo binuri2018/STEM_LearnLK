@@ -10,7 +10,7 @@
     "#3dab9c", "#5b8dee", "#e8a93d", "#e85d5d", "#9b5de5",
     "#3dab6e", "#e85db8", "#5dd5e8", "#e8775d", "#b8e85d",
   ];
-  const ROOT_COLOR = "#c9d3dc";        // light slate — never collides with a branch hue
+  const ROOT_COLOR = "#475569";        // dark slate — never collides with a branch hue, reads on the light canvas
   const GROUP_COLORS = BRANCH_COLORS;  // back-compat export
   const FALLBACK_RELATION = "related to";
   const MAX_NODES = 20;

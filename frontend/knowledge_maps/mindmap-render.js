@@ -486,7 +486,7 @@
       return `${sel}{${body}}`;
     };
     return [
-      "svg{background:" + (getComputedStyle(svgNode.parentElement).backgroundColor || "#0f1419") + "}",
+      "svg{background:" + (getComputedStyle(svgNode.parentElement).backgroundColor || "#f5f7f9") + "}",
       pick(".mm-link", ["fill", "stroke", "stroke-width", "stroke-opacity"]),
       pick(".mm-xlink", ["fill", "stroke", "stroke-width", "stroke-dasharray", "stroke-opacity"]),
       pick(".mm-xlink-label", ["fill", "font", "font-size", "font-family", "opacity"]),
@@ -519,7 +519,7 @@
       canvas.width = Math.round(w * scale);
       canvas.height = Math.round(h * scale);
       const ctx = canvas.getContext("2d");
-      ctx.fillStyle = getComputedStyle(inst.container).backgroundColor || "#0f1419";
+      ctx.fillStyle = getComputedStyle(inst.container).backgroundColor || "#f5f7f9";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       canvas.toBlob((blob) => blob && saveBlob(blob, "mindmap.png"), "image/png");

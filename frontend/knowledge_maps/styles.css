@@ -1,25 +1,27 @@
 :root {
-  --bg: #0f1419;
-  --bg-card: #1a222c;
-  --bg-hover: #1f2b38;
-  --border: #2d3a47;
-  --text: #e8eef4;
-  --text-secondary: #8b9bab;
-  --muted: #8b9bab;
-  --accent: #3dab9c;
-  --accent-dim: #2a7f74;
-  --accent-faint: rgba(61, 171, 156, 0.12);
-  --success: #3dab6e;
-  --success-dim: #1e5c3a;
-  --success-faint: rgba(61, 171, 110, 0.1);
-  --danger: #e85d5d;
-  --danger-dim: #6b3a3a;
-  --danger-faint: rgba(232, 93, 93, 0.1);
-  --warning: #e8a93d;
-  --warning-dim: #6b4e1e;
-  --warning-faint: rgba(232, 169, 61, 0.1);
-  --blue: #5b8dee;
-  --blue-faint: rgba(91, 141, 238, 0.12);
+  /* Matches frontend/common/css/global.css so Knowledge Maps shares the
+     same light theme as Home / Voice Tutor rather than its own palette. */
+  --bg: #f5f7f9;
+  --bg-card: #ffffff;
+  --bg-hover: #f0f3f7;
+  --border: #e5e9ef;
+  --text: #111827;
+  --text-secondary: #4b5563;
+  --muted: #9ca3af;
+  --accent: #00c896;
+  --accent-dim: #00a87f;
+  --accent-faint: rgba(0, 200, 150, 0.12);
+  --success: #16a34a;
+  --success-dim: #15803d;
+  --success-faint: rgba(22, 163, 74, 0.1);
+  --danger: #ef4444;
+  --danger-dim: #b91c1c;
+  --danger-faint: rgba(239, 68, 68, 0.1);
+  --warning: #f59e0b;
+  --warning-dim: #b45309;
+  --warning-faint: rgba(245, 158, 11, 0.1);
+  --blue: #3b82f6;
+  --blue-faint: rgba(59, 130, 246, 0.12);
   --radius: 12px;
   --radius-sm: 8px;
   --font: "DM Sans", "Noto Sans Sinhala", system-ui, sans-serif;
@@ -31,7 +33,7 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font);
-  background: radial-gradient(1200px 800px at 10% -20%, #1a2f2a 0%, var(--bg) 55%);
+  background: var(--bg);
   color: var(--text);
   line-height: 1.55;
 }
@@ -171,22 +173,10 @@ h1 {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem 1.35rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
 }
 
 .full-panel { width: 100%; }
-
-.panels-row {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-@media (min-width: 720px) {
-  .panels-row { flex-direction: row; align-items: flex-start; }
-  .ask-panel  { flex: 1 1 42%; }
-  .answer-panel { flex: 1 1 55%; }
-}
 
 /* ── Form elements ───────────────────────────────── */
 .toolbar { margin-bottom: 1rem; }
@@ -299,18 +289,13 @@ h1 {
 
 .btn-icon { font-size: 0.85em; }
 
-/* ── Mic / TTS ───────────────────────────────────── */
-.mic-icon { color: var(--danger); font-size: 0.65rem; }
-.btn.recording .mic-icon { animation: pulse 1s ease infinite; }
-@keyframes pulse { 50% { opacity: 0.35; } }
-
 /* ── Hint ────────────────────────────────────────── */
 .hint { margin: 1rem 0 0; font-size: 0.78rem; color: var(--muted); }
 .hint code { font-size: 0.85em; background: var(--bg); padding: 0.1rem 0.3rem; border-radius: 4px; }
 
 .muted-hint { font-size: 0.9rem; color: var(--muted); margin: 1rem 0; }
 
-/* ── Q&A answer / sources ────────────────────────── */
+/* ── Section headings (shared across tabs) ─────────── */
 .section-title {
   font-size: 0.85rem;
   font-weight: 600;
@@ -319,30 +304,6 @@ h1 {
   color: var(--muted);
   margin: 0 0 0.6rem;
 }
-.sources-title { margin-top: 1.25rem; }
-
-.answer-box {
-  font-size: 1.02rem;
-  white-space: pre-wrap;
-  padding: 1rem;
-  border-radius: var(--radius);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  min-height: 4rem;
-}
-.answer-box.muted { color: var(--muted); }
-
-.sources { display: flex; flex-direction: column; gap: 0.65rem; }
-
-.source-card {
-  font-size: 0.88rem;
-  padding: 0.75rem 0.85rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: rgba(0,0,0,0.2);
-}
-.source-card strong { color: var(--accent); font-weight: 600; }
-.source-meta { color: var(--muted); font-size: 0.8rem; margin-top: 0.25rem; }
 
 /* ── Footer ──────────────────────────────────────── */
 .footer {
@@ -391,7 +352,7 @@ h1 {
 .drop-zone.drag-over {
   border-color: var(--accent);
   background: var(--accent-faint);
-  box-shadow: 0 0 0 3px rgba(61,171,156,0.15);
+  box-shadow: 0 0 0 3px rgba(0,200,150,0.15);
   color: var(--text);
 }
 
@@ -494,7 +455,7 @@ h1 {
   padding: 0.85rem 1rem;
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--border);
-  background: rgba(0,0,0,0.2);
+  background: var(--bg);
   font-size: 0.9rem;
 }
 
@@ -572,7 +533,7 @@ h1 {
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.2rem 0.55rem;
-  background: rgba(0, 0, 0, 0.14);
+  background: var(--bg);
   color: var(--text-secondary);
   font: inherit;
   font-size: 0.72rem;
@@ -612,7 +573,7 @@ h1 {
   padding: 1rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: rgba(0, 0, 0, 0.14);
+  background: var(--bg);
 }
 
 .repair-note-pane.repaired { border-color: rgba(52, 211, 153, 0.45); }
@@ -642,7 +603,7 @@ h1 {
   border: 1px solid var(--border);
   border-left: 3px solid var(--muted);
   border-radius: var(--radius-sm);
-  background: rgba(0, 0, 0, 0.14);
+  background: var(--bg);
 }
 
 .repair-history-card.repaired { border-left-color: var(--success); }
@@ -710,7 +671,7 @@ h1 {
   padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: rgba(0, 0, 0, 0.16);
+  background: var(--bg);
 }
 
 .evidence-item.web { border-left: 3px solid var(--blue); }
@@ -793,7 +754,7 @@ h1 {
   padding: 1rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(0,0,0,0.15);
+  background: var(--bg);
 }
 
 .correction-original {
@@ -1082,7 +1043,7 @@ h1 {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background:
-    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.035) 1px, transparent 0) 0 0 / 22px 22px,
+    radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.06) 1px, transparent 0) 0 0 / 22px 22px,
     var(--bg);
   overflow: hidden;
 }
@@ -1179,7 +1140,7 @@ h1 {
   padding: 0.85rem 1rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: rgba(0,0,0,0.1);
+  background: var(--bg);
 }
 
 .notes-heading {
@@ -1312,11 +1273,11 @@ h1 {
 }
 
 .tag-chip:hover:not(.selected) {
-  background: rgba(61, 171, 156, .15);
+  background: rgba(0, 200, 150, .15);
 }
 
 .video-summary-panel {
-  background: rgba(61, 171, 156, .07);
+  background: rgba(0, 200, 150, .07);
   border: 1px solid var(--accent);
   border-radius: 8px;
   padding: 1rem 1.1rem;

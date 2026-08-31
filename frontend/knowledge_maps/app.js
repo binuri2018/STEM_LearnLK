@@ -84,164 +84,6 @@ wireSubTabs("#verify-result-tabs");
 wireSubTabs("#tab-synthesis .panel");
 
 /* ══════════════════════════════════════════════════
-   Q&A TAB
-══════════════════════════════════════════════════ */
-function renderSources(items) {
-  const el = $("sources");
-  el.innerHTML = "";
-  if (!items.length) {
-    el.innerHTML = `<p class="source-meta">No chunks retrieved.</p>`;
-    return;
-  }
-  for (const s of items) {
-    const card = document.createElement("div");
-    card.className = "source-card";
-    const title = [s.subject_area, s.topic].filter(Boolean).join(" · ") || "Syllabus excerpt";
-    const bits = [];
-    if (s.grade != null) bits.push(`Grade ${s.grade}`);
-    if (s.document_type) bits.push(s.document_type);
-    if (s.source_file) bits.push(s.source_file);
-    if (s.page_start != null)
-      bits.push(s.page_end != null && s.page_end !== s.page_start
-        ? `pp. ${s.page_start}–${s.page_end}` : `p. ${s.page_start}`);
-    if (s.score != null) bits.push(`sim. ${s.score.toFixed(3)}`);
-    card.innerHTML = `<strong>${escapeHtml(title)}</strong><div class="source-meta">${escapeHtml(bits.join(" · "))}</div>`;
-    el.appendChild(card);
-  }
-}
-
-async function ask() {
-  const q = $("question").value.trim();
-  const lang = $("lang").value;
-  const answerEl = $("answer");
-  const btn = $("btn-ask");
-  if (!q) {
-    answerEl.textContent = "Please type or dictate a question.";
-    answerEl.classList.add("muted");
-    return;
-  }
-  btn.disabled = true;
-  answerEl.textContent = "Thinking…";
-  answerEl.classList.remove("muted");
-  $("btn-tts").disabled = true;
-  try {
-    const r = await fetch(`${API}/api/ask`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: q, response_language: lang }),
-    });
-    if (!r.ok) {
-      const err = await r.json().catch(() => ({}));
-      throw new Error(err.detail || r.statusText);
-    }
-    const data = await r.json();
-    answerEl.textContent = data.answer || "";
-    renderSources(data.sources || []);
-    $("btn-tts").disabled = !data.answer;
-    window.__lastAnswer = data.answer;
-    window.__ttsLang = lang;
-  } catch (e) {
-    answerEl.textContent = `Error: ${e.message}`;
-    answerEl.classList.add("muted");
-    renderSources([]);
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-/* ── Voice input ───────────────────────────────── */
-let mediaRecorder = null;
-let audioChunks = [];
-
-function pickMime() {
-  if (MediaRecorder.isTypeSupported("audio/webm")) return "audio/webm";
-  if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) return "audio/webm;codecs=opus";
-  return "";
-}
-
-async function toggleMic() {
-  const btn = $("btn-mic");
-  const label = $("mic-label");
-  if (mediaRecorder && mediaRecorder.state === "recording") {
-    mediaRecorder.stop();
-    return;
-  }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mime = pickMime();
-    mediaRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
-    audioChunks = [];
-    mediaRecorder.ondataavailable = (e) => { if (e.data.size) audioChunks.push(e.data); };
-    mediaRecorder.onstop = async () => {
-      stream.getTracks().forEach((t) => t.stop());
-      btn.classList.remove("recording");
-      label.textContent = "Voice input";
-      const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || "audio/webm" });
-      await sendTranscribe(blob);
-    };
-    mediaRecorder.start();
-    btn.classList.add("recording");
-    label.textContent = "Stop…";
-  } catch (e) {
-    alert(`Microphone error: ${e.message}`);
-  }
-}
-
-async function sendTranscribe(blob) {
-  const fd = new FormData();
-  fd.append("file", blob, "question.webm");
-  try {
-    const r = await fetch(`${API}/api/transcribe`, { method: "POST", body: fd });
-    if (r.status === 501) {
-      alert("Whisper needs OPENAI_API_KEY on the server.");
-      return;
-    }
-    if (!r.ok) throw new Error(await r.text());
-    const j = await r.json();
-    $("question").value = (j.text || "").trim();
-  } catch (e) {
-    alert(`Transcription failed: ${e.message}`);
-  }
-}
-
-/* ── TTS ───────────────────────────────────────── */
-function browserTts(text, langMode) {
-  const u = new SpeechSynthesisUtterance(text);
-  if (langMode === "si") u.lang = "si-LK";
-  else if (langMode === "en") u.lang = "en-US";
-  else u.lang = /[඀-෿]/.test(text) ? "si-LK" : "en-US";
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
-}
-
-async function playTts() {
-  const text = window.__lastAnswer;
-  if (!text) return;
-  const lang = window.__ttsLang || "auto";
-  try {
-    const r = await fetch(`${API}/api/tts`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text }),
-    });
-    if (r.ok) {
-      const blob = await r.blob();
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audio.play();
-      audio.onended = () => URL.revokeObjectURL(url);
-      return;
-    }
-  } catch { /* fall through */ }
-  browserTts(text, lang);
-}
-
-$("btn-ask").addEventListener("click", ask);
-$("btn-mic").addEventListener("click", toggleMic);
-$("btn-tts").addEventListener("click", playTts);
-$("question").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) ask(); });
-
-/* ══════════════════════════════════════════════════
    VERIFY NOTES TAB — drop zone + OCR
 ══════════════════════════════════════════════════ */
 const dropZone  = $("drop-zone");
@@ -392,6 +234,7 @@ async function runCorrectNote() {
   $("btn-correct-note").disabled = true;
   showEl("correct-note-loading");
   $("corrected-note-output").innerHTML = "";
+  setCorrectedNoteText("");
 
   try {
     const r = await fetch(`${API}/api/m4/repair-note`, {
@@ -417,6 +260,29 @@ async function runCorrectNote() {
   }
 }
 
+/* Plain text of the corrected/repaired note currently on screen. Kept in sync
+   as the student toggles individual repairs on/off, and consumed by the
+   "Use in Synthesis" button. */
+let currentCorrectedNoteText = "";
+
+function setCorrectedNoteText(text) {
+  currentCorrectedNoteText = (text || "").trim();
+  const btn = $("btn-use-in-synthesis");
+  if (btn) btn.classList.toggle("hidden", !currentCorrectedNoteText);
+}
+
+function useCorrectedNoteInSynthesis() {
+  const text = currentCorrectedNoteText.trim();
+  if (!text) { alert("Generate a corrected note first."); return; }
+  $("synth-text").value = text;
+  document.querySelector('.tab-nav .tab[data-tab="synthesis"]')?.click();
+  const target = $("synth-text");
+  target.focus();
+  target.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+$("btn-use-in-synthesis").addEventListener("click", useCorrectedNoteInSynthesis);
+
 function renderCorrectNote(data) {
   if (Array.isArray(data.blocks) && Array.isArray(data.repairs)) {
     renderRepairNote(data);
@@ -434,6 +300,7 @@ function renderLegacyCorrectNote(data) {
   note.className = "sticky-note";
   note.innerHTML = `<div class="sticky-note-label">✦ Corrected Note</div>${escapeHtml(data.corrected_note || "—")}`;
   out.appendChild(note);
+  setCorrectedNoteText(data.corrected_note || "");
 
   // Dropped claims list (struck-through)
   if (data.dropped_claims && data.dropped_claims.length) {
@@ -501,6 +368,7 @@ function renderRepairNote(data) {
   const repaired = makeNotePane("Repaired and re-verified note", repairedText, "repaired");
   comparison.append(original.pane, repaired.pane);
   out.appendChild(comparison);
+  setCorrectedNoteText(repairedText);
 
   const summary = document.createElement("p");
   summary.className = "repair-summary";
@@ -513,6 +381,7 @@ function renderRepairNote(data) {
     repaired.content.textContent = window.RepairState.composeRepairBlocks(
       data.blocks, data.repairs, accepted,
     ) || data.original_text;
+    setCorrectedNoteText(repaired.content.textContent);
     if (window.RepairState.serverTagsAreCurrent(data.repairs, accepted)) {
       if (data.tags?.length) renderTagChips(data.tags);
     } else {
@@ -1236,7 +1105,6 @@ function renderMindMapLegend(svgId, legend, hasCrossLinks) {
 function mindMapOptions(svgId) {
   return {
     svgId,
-    onConceptClick: (label) => sendToQA(`Explain the concept: ${label}`),
     onZoom: (pct) => { const el = $(zoomLabelId(svgId)); if (el) el.textContent = `${pct}%`; },
     onRendered: (info) => {
       $(toolbarIdFor(svgId))?.querySelectorAll("button[data-mm]").forEach((b) => { b.disabled = false; });
@@ -1324,13 +1192,6 @@ document.querySelectorAll('[data-subtab$="mindmap"]').forEach((btn) => {
     requestAnimationFrame(() => MMR()?.fit("mindmap-svg"));
   });
 });
-
-function sendToQA(question) {
-  document.querySelector('[data-tab="qa"]')?.click();
-  const input = $("question");
-  if (input) { input.value = question; input.focus(); }
-  $("btn-ask")?.click();
-}
 
 /* ══════════════════════════════════════════════════
    STRUCTURED NOTES

@@ -75,62 +75,14 @@
 
           <!-- ═══════════════ TAB NAV ═══════════════ -->
           <div class="tab-nav" role="tablist" aria-label="Knowledge Maps navigation tabs">
-            <button class="tab active" data-tab="qa" role="tab" aria-selected="true">Q&amp;A</button>
-            <button class="tab" data-tab="verify" role="tab" aria-selected="false">Verify Notes</button>
+            <button class="tab active" data-tab="verify" role="tab" aria-selected="true">Verify Notes</button>
             <button class="tab" data-tab="synthesis" role="tab" aria-selected="false">Synthesis</button>
           </div>
 
           <div class="main">
 
-            <!-- ═══════════════ TAB: Q&A ═══════════════ -->
-            <div id="tab-qa" class="tab-panel active" role="tabpanel">
-              <div class="panels-row">
-                <section class="panel ask-panel">
-                  <div class="toolbar">
-                    <label class="field-label" for="lang">Answer language</label>
-                    <select id="lang" name="lang" class="select">
-                      <option value="auto">Auto (match question)</option>
-                      <option value="en">English</option>
-                      <option value="si">සිංහල (Sinhala)</option>
-                    </select>
-                  </div>
-
-                  <label class="field-label" for="question">Your question</label>
-                  <textarea
-                    id="question"
-                    class="textarea"
-                    rows="4"
-                    placeholder="e.g. What is the difference between speed and velocity? / විගය සහ වේගය අතර වෙනස කුමක්ද?"
-                  ></textarea>
-
-                  <div class="actions">
-                    <button type="button" id="btn-ask" class="btn primary">Get answer</button>
-                    <button type="button" id="btn-mic" class="btn ghost" title="Speak question (Whisper)">
-                      <span class="mic-icon" aria-hidden="true">●</span>
-                      <span id="mic-label">Voice input</span>
-                    </button>
-                    <button type="button" id="btn-tts" class="btn ghost" disabled title="Read answer aloud">
-                      Read answer
-                    </button>
-                  </div>
-                  <p class="hint">
-                    Voice and "Read answer" use OpenAI when <code>OPENAI_API_KEY</code> is set.
-                    Otherwise your browser may read text using speech synthesis (quality varies for Sinhala).
-                  </p>
-                </section>
-
-                <section class="panel answer-panel">
-                  <h2 class="section-title">Answer</h2>
-                  <div id="answer" class="answer-box muted">Ask a question to see the syllabus-based reply.</div>
-
-                  <h2 class="section-title sources-title">Sources</h2>
-                  <div id="sources" class="sources"></div>
-                </section>
-              </div>
-            </div>
-
             <!-- ═══════════════ TAB: VERIFY NOTES ═══════════════ -->
-            <div id="tab-verify" class="tab-panel" role="tabpanel" hidden>
+            <div id="tab-verify" class="tab-panel active" role="tabpanel">
               <section class="panel full-panel">
                 <div class="verify-layout">
 
@@ -222,6 +174,9 @@
                         <div class="corrected-note-actions">
                           <button type="button" id="btn-correct-note" class="btn ghost">
                             <span class="btn-icon">✦</span> Generate Corrected Note
+                          </button>
+                          <button type="button" id="btn-use-in-synthesis" class="btn ghost hidden">
+                            <span class="btn-icon">→</span> Use in Synthesis
                           </button>
                           <div id="correct-note-loading" class="yt-loading hidden">
                             <div class="spinner"></div>
